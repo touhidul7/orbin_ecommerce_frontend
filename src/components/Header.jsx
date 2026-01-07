@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import Loader from "./Loader";
+import { IoCartOutline } from "react-icons/io5";
 
 const Header = ({ menuopen, setMenuOpen }) => {
   const { cart, user } = useContext(CartContext);
@@ -92,7 +93,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
       onClick={() => (menuopen ? setMenuOpen(false) : "")}
     >
       <header>
-        <div className="bg-black border-b border-gray-900">
+        <div className="bg-white border-b border-gray-100">
           <div className="px-4 mx-auto sm:px-6 lg:px-8">
             <nav className="relative flex items-center justify-between h-16 lg:h-20">
               <div className="">
@@ -103,11 +104,11 @@ const Header = ({ menuopen, setMenuOpen }) => {
                       src="/logo.png"
                       alt=""
                     />
-                    <div className="flex ">
+                   {/*  <div className="flex ">
                       <h1 className="text-white lg:text-2xl text-lg font-extrabold  uppercase">
-                      ভাই দাম কত ? 
+                      Orbin 
                       </h1>
-                    </div>
+                    </div> */}
                   </Link>
                 </div>
                 {/* Mobile Logo */}
@@ -119,7 +120,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
               <div className="hidden lg:flex lg:items-center lg:space-x-7">
                 <Link
                   to="/"
-                  className="text-base font-medium text-white capitalize"
+                  className="text-base font-medium text-black capitalize"
                 >
                   Home
                 </Link>
@@ -141,7 +142,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     >
                       <Link
                         to={`/category/${category.name}`}
-                        className="text-base font-medium text-white flex items-center capitalize"
+                        className="text-base font-medium text-black flex items-center capitalize"
                       >
                         {category.name}
                         {(subCategories[category.name] === null ||
@@ -164,12 +165,12 @@ const Header = ({ menuopen, setMenuOpen }) => {
                       </Link>
 
                       {isHovered && hasSubCategories && (
-                        <div className="absolute left-0 mt-0 w-48 bg-gray-900 rounded-md shadow-lg py-1 z-50">
+                        <div className="absolute left-0 mt-0 w-48 bg-gray-100 rounded-md shadow-lg py-1 z-50">
                           {subCategories[category.name].map((subCat) => (
                             <Link
                               key={subCat}
                               to={`/sub-category/${category.name}/${subCat}`}
-                              className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-800 capitalize"
+                              className="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-200 capitalize"
                             >
                               {subCat}
                             </Link>
@@ -196,12 +197,13 @@ const Header = ({ menuopen, setMenuOpen }) => {
                 className="flex items-center justify-center ml-auto text-white bg-black rounded-full w-9 h-9 lg:hidden relative"
               >
                 <div className="t-0 absolute left-5 bottom-5">
-                  <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
+                  <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-black">
                     {cart.length > 0 ? cart.length : 0}
                   </p>
                 </div>
-                <svg
-                  className="w-5 h-5"
+                <IoCartOutline/>
+                {/* <svg
+                  className="w-5 h-5 text-black"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -213,7 +215,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     strokeWidth="2"
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
-                </svg>
+                </svg> */}
               </Link>
 
               {/* Mobile Menu Button */}
@@ -248,7 +250,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                         src="/profile.png"
                         alt=""
                       />
-                      <span className="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                      <span className="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-black dark:border-gray-200 rounded-full"></span>
                     </Link>
                   </div>
                 ) : (
@@ -256,14 +258,14 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     {localOrderData && (
                       <Link
                         to="/orders"
-                        className="py-2 text-base font-medium text-white transition-all duration-200 focus:text-blue-600"
+                        className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
                       >
                         See Orders
                       </Link>
                     )}
                     <Link
                       to="/login"
-                      className="py-2 text-base font-medium text-white transition-all duration-200 focus:text-blue-600"
+                      className="py-2 text-base font-medium text-black transition-all duration-200 focus:text-blue-600"
                     >
                       Sign in
                     </Link>
@@ -280,7 +282,8 @@ const Header = ({ menuopen, setMenuOpen }) => {
                         {cart.length > 0 ? cart.length : 0}
                       </p>
                     </div>
-                    <svg
+                    <IoCartOutline size={25} className="-mb-2"/>
+                    {/* <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -293,7 +296,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                         strokeLinejoin="round"
                         d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
                       />
-                    </svg>
+                    </svg> */}
                   </div>
                 </Link>
               </div>

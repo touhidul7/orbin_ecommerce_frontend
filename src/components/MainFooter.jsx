@@ -35,13 +35,13 @@ const MainFooter = () => {
   }, []);
 
   return (
-    <section class="py-10 bg-black sm:pt-16 lg:pt-16 mt-20">
+    <section class="py-10 bg-gray-300 sm:pt-16 lg:pt-16 mt-20">
       <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-y-12 gap-x-8 xl:gap-x-12">
           <div class="col-span-2 md:col-span-4 xl:pr-8">
             <Link to="/"><img class="w-auto h-14" src="/logo.png" alt="" /></Link>
 
-            <p class="text-base leading-relaxed text-gray-200 mt-7">
+            <p class="text-base leading-relaxed text-gray-800 mt-7">
               Discover the latest tech at Gadgetex – your one-stop shop for
               innovative gadgets and accessories. Shop smart, stay ahead.
             </p>
