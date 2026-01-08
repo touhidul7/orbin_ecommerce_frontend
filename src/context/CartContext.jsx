@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 // import ReactPixel from 'react-facebook-pixel';
 export const CartContext = createContext();
 
@@ -10,7 +10,8 @@ export const CartProvider = ({ children }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [user, setUser] = useState(null);
     const [order, setOrder] = useState([]);
-    const navigate = useNavigate();
+    const [isCheckoutPopup, setIsCheckoutPopup] = useState(null);
+    // const navigate = useNavigate();
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -78,11 +79,13 @@ export const CartProvider = ({ children }) => {
         if (existingProduct) {
             existingProduct.quantity += 1;
             toast.success("Cart Updated!");
-            navigate('/checkout')
+            // navigate('/checkout')
+            setIsCheckoutPopup(true);
         } else {
             updatedCart.push({ ...product, quantity: 1, selectedColor });
             toast.success("Product added to cart!");
-            navigate('/checkout')
+            // navigate('/checkout')
+            setIsCheckoutPopup(true);
         }
 
         setCart(updatedCart);
@@ -120,7 +123,7 @@ export const CartProvider = ({ children }) => {
 
 
     return (
-        <CartContext.Provider value={{ order, setCart, setUser, cart, addToCart, totalPrice, removeFromCart, increaseQuantity, decreaseQuantity, orderNow, user }}>
+        <CartContext.Provider value={{ order, setCart, setUser, cart, addToCart, totalPrice, removeFromCart, increaseQuantity, decreaseQuantity, orderNow, user, setIsCheckoutPopup, isCheckoutPopup }}>
             {children}
         </CartContext.Provider>
     );

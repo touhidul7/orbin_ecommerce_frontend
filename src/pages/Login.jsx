@@ -70,7 +70,7 @@ const Login = () => {
                                             <div class="flex items-center justify-between">
                                                 <label for="" class="text-base font-medium text-gray-900"> Password </label>
 
-                                                <a href="#" title="" class="text-sm font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 focus:text-orange-600 hover:underline"> Forgot password? </a>
+                                                {/* <a href="#" title="" class="text-sm font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 focus:text-orange-600 hover:underline"> Forgot password? </a> */}
                                             </div>
                                             <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

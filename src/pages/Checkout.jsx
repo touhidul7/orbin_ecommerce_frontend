@@ -9,6 +9,8 @@ import CartSection from "../components/CartSection";
 // import { sha256 } from '../utils/hash';
 
 const Checkout = () => {
+
+  
   const { cart, totalPrice, setCart } = useContext(CartContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

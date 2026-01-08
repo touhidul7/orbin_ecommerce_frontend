@@ -19,7 +19,7 @@ import OrderDtails from "./pages/OrderDtails.jsx";
 import SubCategory from "./pages/SubCategory.jsx";
 import Shop from "./pages/Shop.jsx";
 import MyOrders from "./pages/MyOrders.jsx";
-import ReactPixel from 'react-facebook-pixel';
+import ReactPixel from "react-facebook-pixel";
 
 // const PIXEL_ID = import.meta.env.VITE_API_PIXEL_ID;
 const GTM_ID = import.meta.env.VITE_API_GTM_ID;
@@ -27,14 +27,14 @@ const GTM_ID = import.meta.env.VITE_API_GTM_ID;
 // Initialize Google Tag Manager Data Layer
 (function (w, d, s, l, i) {
   w[l] = w[l] || [];
-  w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+  w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
   var f = d.getElementsByTagName(s)[0],
     j = d.createElement(s),
-    dl = l != 'dataLayer' ? '&l=' + l : '';
+    dl = l != "dataLayer" ? "&l=" + l : "";
   j.async = true;
-  j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+  j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
   f.parentNode.insertBefore(j, f);
-})(window, document, 'script', 'dataLayer', `${GTM_ID}`); 
+})(window, document, "script", "dataLayer", `${GTM_ID}`);
 
 // Initialize Meta Pixel
 /* const advancedMatching = {};
@@ -129,10 +129,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}>
-      <CartProvider>
+    <CartProvider>
+      <RouterProvider router={router}>
         <Toaster />
-      </CartProvider>
-    </RouterProvider>
+      </RouterProvider>
+    </CartProvider>
   </StrictMode>
 );

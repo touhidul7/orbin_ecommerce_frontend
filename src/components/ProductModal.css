@@ -1,0 +1,148 @@
+
+/* ১. পপআপের বাইরের ব্যাকগ্রাউন্ড (Overlay) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.6); /* অন্ধকার আবছা ব্যাকগ্রাউন্ড */
+  display: flex;
+  justify-content: center; /* হরাইজন্টাল সেন্টার */
+  align-items: center;     /* ভার্টিকাল সেন্টার */
+  z-index: 9999;           /* সবকিছুর উপরে থাকবে */
+  backdrop-filter: blur(4px); /* ব্যাকগ্রাউন্ড হালকা ঝাপসা করবে */
+}
+
+/* ২. মূল মডাল বক্স */
+.delivery-form {
+  background: #ffffff;
+  width: 90%;
+  max-width: 600px; /* পপআপের চওড়া */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalPop 0.3s ease-out; /* সুন্দর এনিমেশন */
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ৩. ইনপুট গ্রিড (২টি করে এক লাইনে) */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* ৪. রেডিও ডেলিভারি অপশন */
+.delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.active-option {
+  border: 2px solid #2563eb;
+  background-color: #f0f7ff;
+}
+
+.radio-option input {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ৫. অর্ডার বাটন */
+.order-submit-btn {
+  width: 100%;
+  background-color: #2563eb;
+  color: #fff;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.order-submit-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* মোবাইলের জন্য এক কলাম ডিজাইন */
+@media (max-width: 600px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
