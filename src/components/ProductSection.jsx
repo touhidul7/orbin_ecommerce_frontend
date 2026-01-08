@@ -227,7 +227,7 @@ const ProductSection = ({ loading, data, className }) => {
 
                     <button
                       onClick={() => orderNow(item, selectedColors[item.id])}
-                      className="bg-[#ffff00] text-black font-bold py-2 px-4 rounded-md hover:bg-[#ffff00] hover:text-black transition duration-300 cursor-pointer"
+                      className="bg-[#DF263A] text-white font-bold py-2 px-4 rounded-md hover:bg-[#af0505] hover:text-white transition duration-300 cursor-pointer"
                     >
                       অর্ডার করুন
                     </button>

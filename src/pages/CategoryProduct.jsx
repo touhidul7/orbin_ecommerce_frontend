@@ -31,7 +31,7 @@ const CategoryProduct = () => {
   }, [id]);
   return (
     <div>
-      <div class="text-center p-10 bg-green-700">
+      <div class="text-center p-10 bg-[#BA0001]">
         <h1 class="font-bold text-4xl mb-4 text-white">{id.toUpperCase()}</h1>
       </div>
       <div className="mt-16 lg:px-8">

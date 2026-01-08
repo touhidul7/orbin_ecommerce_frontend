@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { IoCloseOutline } from "react-icons/io5";
+import OrderSuccessPopup from "./OrderSuccessPopup";
 
 export default function CheckoutPopup({ closeModal }) {
   const { cart, totalPrice, setCart, setIsCheckoutPopup } =
@@ -16,6 +17,7 @@ export default function CheckoutPopup({ closeModal }) {
   const [getUser, setGetUser] = useState("");
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orderSuccess, setOrderSuccess] = useState(false);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Generate random order ID
@@ -28,6 +30,11 @@ export default function CheckoutPopup({ closeModal }) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     setRandomId(result);
+  };
+
+  const clearSuccess = () => {
+    setIsCheckoutPopup(false);
+    setOrderSuccess(false);
   };
 
   // Track ViewCart event when component mounts
@@ -237,7 +244,8 @@ export default function CheckoutPopup({ closeModal }) {
         setCart([]);
         localStorage.setItem("cart", JSON.stringify([]));
 
-        navigate("/order-success");
+        // navigate("/order-success");
+        setOrderSuccess(true);
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || "Order placement failed");
@@ -249,16 +257,34 @@ export default function CheckoutPopup({ closeModal }) {
 
   return (
     <div className="modal-overlay">
-      <div className="delivery-form">
+      <div className={`delivery-form ${orderSuccess ? " " : "hidden"}`}>
         <div className="w-full flex justify-end">
-          <button className="mb-4 cursor-pointer -mr-2 -mt-4" type="button" onClick={() => setIsCheckoutPopup(false)}>
+          <button
+            className="mb-4 cursor-pointer -mr-2 -mt-4"
+            type="button"
+            onClick={clearSuccess}
+          >
             <IoCloseOutline size={30} />
-
+          </button>
+        </div>{" "}
+        <OrderSuccessPopup clearSuccess={clearSuccess} />{" "}
+      </div>
+      <div
+        className={`delivery-form md:mt-0 mt-[320px] mb-10 ${
+          orderSuccess ? "hidden" : " "
+        }`}
+      >
+        <div className="w-full flex justify-end">
+          <button
+            className="mb-4 cursor-pointer -mr-2 -mt-4"
+            type="button"
+            onClick={() => setIsCheckoutPopup(false)}
+          >
+            <IoCloseOutline size={30} />
           </button>
         </div>
-        <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:min-w-full xl:max-w-md rounded-lg border border-gray-200 p-5">
+        <div className="mt-6 w-full space-y-6 sm:mt-8 lg:mt-0 lg:min-w-full xl:max-w-md rounded-lg border border-gray-200 p-5 mb-6">
           <div className="flow-root">
-            {/* <CartSection /> */}
             <div className="my-3 divide-y divide-gray-200">
               <dl className="flex items-center justify-between gap-4 py-3">
                 <dt className="text-base font-normal text-gray-500">
@@ -347,7 +373,11 @@ export default function CheckoutPopup({ closeModal }) {
           </div>
 
           <div className="delivery-options">
-            <label className="radio-option">
+            <label
+              className={`radio-option ${
+                formData.deliveryArea === "inside" ? "active-option" : " "
+              } `}
+            >
               <input
                 id="inside-dhaka"
                 type="radio"
@@ -359,7 +389,11 @@ export default function CheckoutPopup({ closeModal }) {
               ঢাকার ভিতরে (ডেলিভারি চার্জ: ৳৭০)
             </label>
 
-            <label className="radio-option active-option">
+            <label
+              className={`radio-option ${
+                formData.deliveryArea === "outside" ? "active-option" : " "
+              } `}
+            >
               <input
                 id="outside-dhaka"
                 type="radio"

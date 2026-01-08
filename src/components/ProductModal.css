@@ -76,11 +76,12 @@
 }
 
 .active-option {
-  border: 2px solid #2563eb;
+  border: 1px solid #af0505;
   background-color: #f0f7ff;
 }
 
 .radio-option input {
+  border: 1px solid transparent;
   margin-right: 12px;
   width: 18px;
   height: 18px;
@@ -89,7 +90,7 @@
 /* ৫. অর্ডার বাটন */
 .order-submit-btn {
   width: 100%;
-  background-color: #2563eb;
+  background-color: #af1c2a;
   color: #fff;
   padding: 15px;
   border: none;
@@ -101,7 +102,7 @@
 }
 
 .order-submit-btn:hover {
-  background-color: #1d4ed8;
+  background-color: #920505;
 }
 
 /* মোবাইলের জন্য এক কলাম ডিজাইন */
