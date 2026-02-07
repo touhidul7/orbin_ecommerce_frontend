@@ -19,9 +19,6 @@ const CartSection = () => {
           .replace(/[^a-zA-Z0-9-]/g, '') // Remove special characters
           .toLowerCase();
       };
-
-      console.log(cart);
-      
     return (
         <div>
             <div className="space-y-6">

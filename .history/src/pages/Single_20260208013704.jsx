@@ -178,10 +178,6 @@ const Single = () => {
       alert("Please select a color first");
       return;
     }
-    if (!selectedSize) {
-      toast.error("Please select a size");
-      return;
-    }
 
     // Track InitiateCheckout event
     /* ReactPixel.track('InitiateCheckout', {
@@ -212,7 +208,7 @@ const Single = () => {
       }
     }); */
 
-    orderNow(data, selectedColor?.code,selectedSize || null);
+    orderNow(data, selectedColor?.code || null);
   };
 
   useEffect(() => {

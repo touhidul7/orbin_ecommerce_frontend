@@ -185,7 +185,7 @@ const ProductSection = ({ loading, data, className }) => {
                           <button
                             key={index}
                             onClick={() => setSelectedSize(size)}
-                            className={`px-3 py-1 border rounded text-sm font-medium transition cursor-pointer
+                            className={`px-3 py-1 border rounded text-sm font-medium transition
           ${selectedSize === size
                                 ? "bg-blue-600 text-white border-blue-600"
                                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"

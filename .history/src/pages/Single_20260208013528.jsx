@@ -169,17 +169,13 @@ const Single = () => {
           }
         }); */
 
-    addToCart(data, selectedColor?.code, selectedSize || null);
+    addToCart(data, selectedColor?.code || null);
     setIsCartOpen(!isCartOpen);
   };
 
   const handleOrderNow = () => {
     if (colors.length > 0 && !selectedColor) {
       alert("Please select a color first");
-      return;
-    }
-    if (!selectedSize) {
-      toast.error("Please select a size");
       return;
     }
 
@@ -212,7 +208,7 @@ const Single = () => {
       }
     }); */
 
-    orderNow(data, selectedColor?.code,selectedSize || null);
+    orderNow(data, selectedColor?.code || null);
   };
 
   useEffect(() => {

@@ -17,9 +17,6 @@ const ProductSection = ({ loading, data, className }) => {
   } = useContext(CartContext);
   const [selectedColors, setSelectedColors] = useState({});
   const [quantities, setQuantities] = useState({});
-  // For Size selection (if needed in the future)
-  const [selectedSize, setSelectedSize] = useState(null);
-
 
   /* Color handling functions */
   const getColorCode = (colorName) => {
@@ -176,27 +173,7 @@ const ProductSection = ({ loading, data, className }) => {
                     />
                   </Link>
                   {/* Product Size */}
-
-                  <p className="text-sm text-gray-600 mt-1">
-                    <div className="flex gap-2 mt-2 flex-wrap">
-                      {item.size
-                        ?.split(",")
-                        .map((size, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedSize(size)}
-                            className={`px-3 py-1 border rounded text-sm font-medium transition cursor-pointer
-          ${selectedSize === size
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                              }
-        `}
-                          >
-                            {size.toUpperCase()}
-                          </button>
-                        ))}
-                    </div>
-                  </p>
+                  <p className="text-sm text-gray-600 mt-1">{item.size}</p>
 
                   <Link to={`/product/${item.id}/${formatUrl(item.product_name)}`}>
                     <h3 className="text-lg font-semibold text-gray-800 mt-4">

@@ -1,0 +1,353 @@
+:root {
+  --eid-text: #0f172a;
+  --eid-muted: #6b7280;
+  --eid-border: #e5e7eb;
+  --eid-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --eid-green: #06b64a;
+  --eid-navy: #0b2b3a;
+}
+
+.eid-wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 22px 18px 30px;
+  background: #fff;
+}
+
+.eid-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.eid-heading {
+  display: inline-block;
+}
+
+.eid-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+  color: var(--eid-text);
+  text-transform: uppercase;
+}
+
+.eid-underline {
+  height: 3px;
+  width: 92px;
+  background: #0f172a;
+  border-radius: 999px;
+}
+
+.eid-seeMore {
+  background: var(--eid-navy);
+  color: #fff;
+  border: none;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(2, 6, 23, 0.12);
+}
+
+.eid-seeMoreArrow {
+  font-size: 18px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.eid-row {
+  position: relative;
+}
+
+.eid-track {
+  display: flex;
+  align-items: stretch;
+  gap: 22px;
+  overflow-x: auto;
+  padding: 6px 6px 14px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.eid-track::-webkit-scrollbar {
+  display: none;
+}
+
+.eid-nav {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--eid-border);
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+  color: #111827;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  z-index: 3;
+}
+
+.eid-nav-left {
+  left: 4px;
+}
+
+.eid-nav-right {
+  right: 4px;
+}
+
+/* Cards */
+.eid-card {
+  background: #fff;
+  border: 1px solid var(--eid-border);
+  border-radius: 12px;
+  box-shadow: var(--eid-shadow);
+  scroll-snap-align: start;
+}
+
+/* Featured: larger, with order button and options */
+.eid-card-featured {
+  width: 335px;
+  min-width: 335px;
+  overflow: hidden;
+}
+
+.eid-media {
+  position: relative;
+  background: #fff;
+  height: 210px;
+}
+
+.eid-mediaTop {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.eid-badge {
+  background: var(--eid-green);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.eid-imageWrap {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 28px 18px 10px;
+}
+
+.eid-img {
+  max-width: 88%;
+  max-height: 85%;
+  object-fit: contain;
+}
+
+/* Featured content */
+.eid-content {
+  padding: 14px 16px 14px;
+}
+
+.eid-sizes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.eid-size {
+  width: 28px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid var(--eid-border);
+  background: #fff;
+  color: #111827;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.eid-colors {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.eid-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.2);
+}
+
+.eid-dot-brown {
+  background: #7a4a17;
+}
+
+.eid-dot-black {
+  background: #111827;
+}
+
+.eid-name {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  color: #111827;
+}
+
+.eid-priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.eid-price {
+  font-weight: 800;
+  color: #111827;
+}
+
+.eid-old {
+  color: #9ca3af;
+  text-decoration: line-through;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.eid-order {
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.6px solid #9aa7b2;
+  background: #fff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.eid-bolt {
+  font-size: 15px;
+}
+
+/* Compact cards */
+.eid-card-compact {
+  width: 260px;
+  min-width: 260px;
+  overflow: hidden;
+  box-shadow: none; /* screenshot shows flatter for small cards */
+  border-color: transparent;
+}
+
+.eid-media-compact {
+  height: 210px;
+  border-radius: 0;
+}
+
+.eid-imageWrap-compact {
+  padding: 26px 18px 10px;
+}
+
+.eid-content-compact {
+  padding: 12px 8px 14px;
+}
+
+.eid-code {
+  height: 18px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #374151;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.eid-code-empty {
+  color: transparent;
+}
+
+.eid-name-compact {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.eid-priceRow-compact {
+  margin-bottom: 0;
+}
+
+/* Brand marks */
+.eid-brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.eid-brand-box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #f3b82a;
+  color: #111827;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.eid-brand-nexo {
+  gap: 6px;
+  user-select: none;
+}
+
+.eid-nexo-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #ff7a18, #af002d);
+  display: inline-block;
+}
+
+.eid-nexo-text {
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .eid-nav {
+    display: none;
+  }
+  .eid-card-featured {
+    width: 320px;
+    min-width: 320px;
+  }
+}

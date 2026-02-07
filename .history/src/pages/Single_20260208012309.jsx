@@ -6,7 +6,6 @@ import { CartContext } from "../context/CartContext";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { RiMessengerLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
-import toast from "react-hot-toast";
 // import ReactPixel from 'react-facebook-pixel';
 
 const Single = () => {
@@ -19,7 +18,6 @@ const Single = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const { cart, addToCart, orderNow } = useContext(CartContext);
   const isInCart = cart.some((item) => item.id === data?.id);
-  const [selectedSize, setSelectedSize] = useState(null);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
@@ -75,9 +73,9 @@ const Single = () => {
   // Process colors from data
   const colors = data?.color
     ? data.color.split(",").map((color) => ({
-      name: color.trim(),
-      code: getColorCode(color.trim()),
-    }))
+        name: color.trim(),
+        code: getColorCode(color.trim()),
+      }))
     : [];
 
   // Initialize selectedColor state
@@ -136,40 +134,36 @@ const Single = () => {
       alert("Please select a color first");
       return;
     }
-    if (!selectedSize) {
-      toast.error("Please select a size");
-      return;
-    }
-
+    
     // Track AddToCart event
-    /*  ReactPixel.track('AddToCart', {
-       content_ids: [data.id],
-       content_name: data.product_name,
-       content_type: 'product',
-       value: data.selling_price,
-       currency: 'BDT',
-       contents: [{
-         id: data.id,
-         quantity: 1,
-         item_price: data.selling_price
-       }]
-     }); */
+   /*  ReactPixel.track('AddToCart', {
+      content_ids: [data.id],
+      content_name: data.product_name,
+      content_type: 'product',
+      value: data.selling_price,
+      currency: 'BDT',
+      contents: [{
+        id: data.id,
+        quantity: 1,
+        item_price: data.selling_price
+      }]
+    }); */
 
     // Google Analytics add_to_cart
-    /*     window.dataLayer.push({
-          event: "add_to_cart",
-          ecommerce: {
-            items: [{
-              item_id: data.id,
-              item_name: data.product_name,
-              price: data.selling_price,
-              item_category: data.select_category,
-              quantity: 1
-            }]
-          }
-        }); */
+/*     window.dataLayer.push({
+      event: "add_to_cart",
+      ecommerce: {
+        items: [{
+          item_id: data.id,
+          item_name: data.product_name,
+          price: data.selling_price,
+          item_category: data.select_category,
+          quantity: 1
+        }]
+      }
+    }); */
 
-    addToCart(data, selectedColor?.code, selectedSize || null);
+    addToCart(data, selectedColor?.code || null);
     setIsCartOpen(!isCartOpen);
   };
 
@@ -178,11 +172,7 @@ const Single = () => {
       alert("Please select a color first");
       return;
     }
-    if (!selectedSize) {
-      toast.error("Please select a size");
-      return;
-    }
-
+    
     // Track InitiateCheckout event
     /* ReactPixel.track('InitiateCheckout', {
       content_ids: [data.id],
@@ -212,7 +202,7 @@ const Single = () => {
       }
     }); */
 
-    orderNow(data, selectedColor?.code,selectedSize || null);
+    orderNow(data, selectedColor?.code || null);
   };
 
   useEffect(() => {
@@ -306,55 +296,34 @@ const Single = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Product Size */}
-                  <span className="font-bold text-gray-700">
-                    Choose Size:
-                  </span>
-                  <div className="flex gap-2 mt-2 flex-wrap">
-                    {data.size
-                      ?.split(",")
-                      .map((size, index) => (
+                  {colors.length > 0 && (
+                  <div className="mt-4">
+                    <span className="font-bold text-gray-700">
+                      Choose Color:
+                    </span>
+                    <div className="flex gap-2 mt-2">
+                      {colors.map((color, index) => (
                         <button
                           key={index}
-                          onClick={() => setSelectedSize(size)}
-                          className={`px-3 py-1 border rounded text-sm font-medium transition cursor-pointer
-          ${selectedSize === size
-                              ? "bg-blue-600 text-white border-blue-600"
-                              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                            }
-        `}
-                        >
-                          {size.toUpperCase()}
-                        </button>
-                      ))}
-                  </div>
-                  {colors.length > 0 && (
-                    <div className="mt-4">
-                      <span className="font-bold text-gray-700">
-                        Choose Color:
-                      </span>
-                      <div className="flex gap-2 mt-2">
-                        {colors.map((color, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedColor(color)}
-                            className={`w-8 h-8 rounded border-2 transition-all ${selectedColor?.code === color.code
+                          onClick={() => setSelectedColor(color)}
+                          className={`w-8 h-8 rounded border-2 transition-all ${
+                            selectedColor?.code === color.code
                               ? "border-black shadow-md"
                               : "border-gray-300"
-                              } hover:shadow-sm`}
-                            style={{ backgroundColor: color.code }}
-                            title={color.name}
-                            aria-label={`Select color ${color.name}`}
-                          />
-                        ))}
-                      </div>
-                      {selectedColor && (
-                        <p className="text-sm text-gray-600 mt-1">
-                          Selected: {selectedColor.name}
-                        </p>
-                      )}
+                          } hover:shadow-sm`}
+                          style={{ backgroundColor: color.code }}
+                          title={color.name}
+                          aria-label={`Select color ${color.name}`}
+                        />
+                      ))}
                     </div>
-                  )}
+                    {selectedColor && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        Selected: {selectedColor.name}
+                      </p>
+                    )}
+                  </div>
+                )}
                   <div className="flex justify-items-stretch gap-4 lg:-mx-2 mb-4 pt-8">
                     <div className="w-full">
                       {isInCart ? (

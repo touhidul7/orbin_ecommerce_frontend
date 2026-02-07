@@ -6,7 +6,6 @@ import { CartContext } from "../context/CartContext";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { RiMessengerLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
-import toast from "react-hot-toast";
 // import ReactPixel from 'react-facebook-pixel';
 
 const Single = () => {
@@ -136,10 +135,6 @@ const Single = () => {
       alert("Please select a color first");
       return;
     }
-    if (!selectedSize) {
-      toast.error("Please select a size");
-      return;
-    }
 
     // Track AddToCart event
     /*  ReactPixel.track('AddToCart', {
@@ -169,17 +164,13 @@ const Single = () => {
           }
         }); */
 
-    addToCart(data, selectedColor?.code, selectedSize || null);
+    addToCart(data, selectedColor?.code || null);
     setIsCartOpen(!isCartOpen);
   };
 
   const handleOrderNow = () => {
     if (colors.length > 0 && !selectedColor) {
       alert("Please select a color first");
-      return;
-    }
-    if (!selectedSize) {
-      toast.error("Please select a size");
       return;
     }
 
@@ -212,7 +203,7 @@ const Single = () => {
       }
     }); */
 
-    orderNow(data, selectedColor?.code,selectedSize || null);
+    orderNow(data, selectedColor?.code || null);
   };
 
   useEffect(() => {
