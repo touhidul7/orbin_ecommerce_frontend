@@ -35,7 +35,7 @@ const MainFooter = () => {
   }, []);
 
   return (
-    <section class="py-10 bg-gray-300 sm:pt-16 lg:pt-16 mt-20">
+    <section class="py-10 bg-[#FCCCD8] sm:pt-16 lg:pt-16 mt-20">
       <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-y-12 gap-x-8 xl:gap-x-12">
           <div class="col-span-2 md:col-span-4 xl:pr-8">
@@ -70,13 +70,13 @@ const MainFooter = () => {
           </div>
 
           <div class="lg:col-span-2">
-            <p class="text-md font-semibold text-gray-100">Categories</p>
+            <p class="text-md font-semibold text-gray-900">Categories</p>
 
             <ul class="mt-6 space-y-2">
               {data[0]?.slice(0, 5).map((item) => (
                 <li key={item.id}>
                   <Link
-                    className="flex text-sm font-semibold text-gray-200 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
+                    className="flex text-sm font-semibold text-gray-800 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
                     style={{ textTransform: "capitalize" }}
                     to={`/category/${item.name}`}
                   >
@@ -88,14 +88,14 @@ const MainFooter = () => {
           </div>
 
           <div class="lg:col-span-2">
-            <p class="text-md font-semibold text-gray-100">Contact</p>
+            <p class="text-md font-semibold text-gray-900">Contact</p>
 
             <ul class="mt-6 space-y-2">
               <li>
                 <a
                   href="tel:+8801828308123"
                   target="_blank"
-                  class="flex items-center gap-2  text-sm font-semibold text-gray-200 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
+                  class="flex items-center gap-2  text-sm font-semibold text-gray-800 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
                 >
                   <FaPhoneAlt /> +880 1828308123
                 </a>
@@ -104,7 +104,7 @@ const MainFooter = () => {
                 <a
                   href="https://web.facebook.com/brittosoftbd"
                   target="_blank"
-                  class="flex items-center gap-2  text-sm font-semibold text-gray-200 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
+                  class="flex items-center gap-2  text-sm font-semibold text-gray-800 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
                 >
                   <FaFacebookF className="text-blue-600" size={15} /> Facebook
                 </a>
@@ -113,7 +113,7 @@ const MainFooter = () => {
                 <a
                   href="https://wa.me/+8801828308123"
                   target="_blank"
-                  class="flex items-center gap-2  text-sm font-semibold text-gray-200 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
+                  class="flex items-center gap-2  text-sm font-semibold text-gray-800 transition-all duration-200 hover:text-green-600 focus:text-orange-600"
                 >
                   {" "}
                   <IoLogoWhatsapp className="text-green-600" size={15} />
@@ -143,10 +143,10 @@ const MainFooter = () => {
             </li>
           </ul>
         </div>
-        <hr class="mt-16 mb-10 border-gray-200" />
+        <hr class="mt-16 mb-10 border-gray-800" />
 
         <div class="sm:flex sm:items-center justify-center">
-          <p class="text-sm text-gray-300">
+          <p class="text-sm text-gray-700">
             © Copyright 2021, All Rights Reserved by Vai Dam Koto
           </p>
         </div>
