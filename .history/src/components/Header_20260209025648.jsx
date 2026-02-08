@@ -270,20 +270,14 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     </svg>
                   </Link>
 
-     <div className="w-full">
+                 {/* Mobile Account Dropdown */}
+<div className="select-none">
   <button
     type="button"
-    onClick={() => {
-      setAccountOpen((s) => !s);
-      // ensure items become visible even on small screens
-      setTimeout(() => {
-        const el = document.getElementById("mobile-account-items");
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }, 0);
-    }}
-    className="w-full py-2 text-base font-medium text-white flex items-center justify-between"
+    onClick={() => setAccountOpen((s) => !s)}
+    className="w-full py-2 text-base font-medium text-white transition-all duration-200 flex items-center justify-between"
   >
-    <span>Account</span>
+    Account
     <svg
       className={`w-4 h-4 text-white transition-transform ${
         accountOpen ? "rotate-180" : ""
@@ -291,6 +285,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         strokeLinecap="round"
@@ -301,55 +296,46 @@ const Header = ({ menuopen, setMenuOpen }) => {
     </svg>
   </button>
 
-  {/* Animated container to avoid clipping */}
-  <div
-    className={`grid transition-all duration-200 ${
-      accountOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-    }`}
-  >
-    <div className="overflow-hidden">
-      <div id="mobile-account-items" className="pl-4 pb-2">
-        {user?.user?.uid ? (
+  {accountOpen && (
+    <div className="ml-4">
+      {user?.user?.uid ? (
+        <Link
+          to="/account"
+          className="block py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
+          onClick={() => {
+            setMenuOpen(false);
+            setAccountOpen(false);
+          }}
+        >
+          My Account
+        </Link>
+      ) : (
+        <>
           <Link
-            to="/account"
-            className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
+            to="/login"
+            className="block py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
             onClick={() => {
               setMenuOpen(false);
               setAccountOpen(false);
             }}
           >
-            My Account
+            Login
           </Link>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/register"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Register
-            </Link>
-          </>
-        )}
-      </div>
+          <Link
+            to="/register"
+            className="block py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
+            onClick={() => {
+              setMenuOpen(false);
+              setAccountOpen(false);
+            }}
+          >
+            Register
+          </Link>
+        </>
+      )}
     </div>
-  </div>
+  )}
 </div>
-
 
                 </div>
 

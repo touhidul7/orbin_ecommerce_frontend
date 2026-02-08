@@ -11,7 +11,6 @@ const Header = ({ menuopen, setMenuOpen }) => {
   const [categories, setCategories] = useState([]);
   const [localOrderData, setLocalOrderData] = useState([]);
   const [subCategories, setSubCategories] = useState({});
-  const [accountOpen, setAccountOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -270,87 +269,44 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     </svg>
                   </Link>
 
-     <div className="w-full">
-  <button
-    type="button"
-    onClick={() => {
-      setAccountOpen((s) => !s);
-      // ensure items become visible even on small screens
-      setTimeout(() => {
-        const el = document.getElementById("mobile-account-items");
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }, 0);
-    }}
-    className="w-full py-2 text-base font-medium text-white flex items-center justify-between"
-  >
-    <span>Account</span>
-    <svg
-      className={`w-4 h-4 text-white transition-transform ${
-        accountOpen ? "rotate-180" : ""
-      }`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M19 9l-7 7-7-7"
-      />
-    </svg>
-  </button>
-
-  {/* Animated container to avoid clipping */}
-  <div
-    className={`grid transition-all duration-200 ${
-      accountOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-    }`}
-  >
-    <div className="overflow-hidden">
-      <div id="mobile-account-items" className="pl-4 pb-2">
-        {user?.user?.uid ? (
-          <Link
-            to="/account"
-            className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-            onClick={() => {
-              setMenuOpen(false);
-              setAccountOpen(false);
-            }}
-          >
-            My Account
-          </Link>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/register"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Register
-            </Link>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
-
-
+                  {user?.user?.uid ? (
+                    <Link to="/account" className="flex items-center gap-2">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <path
+                          d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                        />
+                        <path
+                          d="M4 21a8 8 0 0 1 16 0"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <span className="text-[13px] font-medium">Account</span>
+                      <svg
+                        className="w-3.5 h-3.5 opacity-80"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path
+                          d="M6 9l6 6 6-6"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="text-[13px] font-medium hover:text-white"
+                    >
+                      Account
+                    </Link>
+                  )}
                 </div>
 
                 {/* Mobile cart */}
