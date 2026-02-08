@@ -133,7 +133,7 @@ const ProductSection = ({ loading, data, className }) => {
         quantity: quantities[item.id] || 1
       });
     }; */
-  console.log(selectedColors);
+  // console.log(selectedColors);
 
   const formatUrl = (str) => {
     if (!str) return 'product'; // Fallback for null/undefined
@@ -147,7 +147,7 @@ const ProductSection = ({ loading, data, className }) => {
   return (
     <>
       <div
-        className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-4 lg:px-10 ${className}`}
+        className={`text-center grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-4 mb-10 ${className}`}
       >
         {loading ? (
           <Loader />
@@ -162,7 +162,7 @@ const ProductSection = ({ loading, data, className }) => {
               return (
                 <div
                   key={item.id}
-                  className="bg-white border-1 border-gray-100 p-2 rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-100"
+                  className="custom-hover-for-product bg-white border-1 border-gray-100 pb-3 rounded-lg shadow-lg hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-100"
                 >
                   <Link to={`/product/${item.id}/${formatUrl(item.product_name)}`}>
                     <img
@@ -178,7 +178,7 @@ const ProductSection = ({ loading, data, className }) => {
                   {/* Product Size */}
 
                   <p className="text-sm text-gray-600 mt-1">
-                    <div className="flex gap-2 mt-2 flex-wrap">
+                    <div className="flex gap-2 mt-2 flex-wrap justify-center">
                       {item.size
                         ?.split(",")
                         .map((size, index) => (
@@ -198,26 +198,15 @@ const ProductSection = ({ loading, data, className }) => {
                     </div>
                   </p>
 
-                  <Link to={`/product/${item.id}/${formatUrl(item.product_name)}`}>
-                    <h3 className="text-lg font-semibold text-gray-800 mt-4">
-                      {item.product_name?.substring(0, 27) || "No Name Available"}
-                    </h3>
-                  </Link>
-                  <p className="text-sm text-gray-600 mt-1">{item.select_category}</p>
-                  <p className="text-xl font-semibold text-gray-900 mt-2">
-                    <span className="line-through mr-4 text-red-500">৳ {item.regular_price}</span>{" "}
-                    <span>৳{item.selling_price}</span>
-                  </p>
-
                   {/* Color Selection */}
                   {hasColors && (
                     <div className="mt-2">
-                      <div className="flex gap-1 flex-wrap">
+                      <div className="flex gap-1 flex-wrap justify-center">
                         {colors?.map((color, index) => (
                           <button
                             key={index}
                             onClick={() => handleColorSelect(item.id, color.code)}
-                            className={`w-6 h-6 rounded border-2 cursor-pointer ${selectedColors[item.id] === color.code
+                            className={`w-4 h-4 rounded-full border-2 cursor-pointer ${selectedColors[item.id] === color.code
                               ? "border-gray-400"
                               : "border-gray-300"
                               }`}
@@ -229,16 +218,24 @@ const ProductSection = ({ loading, data, className }) => {
                     </div>
                   )}
 
-
-
-                  <div className="mt-3 flex flex-col gap-2 items-stretch">
+                  <Link to={`/product/${item.id}/${formatUrl(item.product_name)}`}>
+                    <h3 className="text-lg font-semibold text-gray-800 mt-4">
+                      {item.product_name?.substring(0, 27) || "No Name Available"}
+                    </h3>
+                  </Link>
+                  {/* <p className="text-sm text-gray-600 mt-1">{item.select_category}</p> */}
+                  <p className="text-xl font-semibold text-gray-900 mt-2">
+                    <span className="line-through text-red-500">৳ {item.regular_price}</span>{" "}
+                    <span>৳{item.selling_price}</span>
+                  </p>
+                  <div className="mt-3 flex flex-col-2 gap-2 items-stretch justify-center order-button-hover">
                     {isInCart ? (
                       <div className="flex flex-col gap-2">
                         <Link
                           to="/cart"
                           className="bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer text-center"
                         >
-                          কার্ট দেখুন
+                          VIEW CART
                         </Link>
                       </div>
                     ) : (
@@ -246,7 +243,7 @@ const ProductSection = ({ loading, data, className }) => {
                         onClick={() => { addToCart(item, selectedColors[item.id]); setIsCartOpen(!isCartOpen) }}
                         className="bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer text-center"
                       >
-                        কার্টে রাখুন
+                        ADD CART
                       </button>
                     )}
 
@@ -254,7 +251,7 @@ const ProductSection = ({ loading, data, className }) => {
                       onClick={() => orderNow(item, selectedColors[item.id])}
                       className="bg-[#DF263A] text-white font-bold py-2 px-4 rounded-md hover:bg-[#af0505] hover:text-white transition duration-300 cursor-pointer"
                     >
-                      অর্ডার করুন
+                      ORDER NOW
                     </button>
                   </div>
                 </div>

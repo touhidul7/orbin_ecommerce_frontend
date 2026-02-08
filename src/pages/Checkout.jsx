@@ -245,6 +245,9 @@ const Checkout = () => {
   return (
     <>
       <section className="bg-white py-8 antialiased">
+          <div class="text-center p-10 bg-[#BA0001] mt-10">
+            <h1 class="font-bold text-4xl mb-4 text-white">Checkout</h1>
+          </div>
         <form
           onSubmit={checkOut}
           className="mx-auto max-w-screen px-4 2xl:px-0"
@@ -371,24 +374,14 @@ const Checkout = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <button
+                  {/* <button
                     type="submit"
-                    className="cursor-pointer flex w-full items-center justify-center rounded-lg bg-[#2A59FF] px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+                    className="cursor-pointer flex w-full items-center justify-center rounded-lg bg-[#BA0001] px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
                   >
                     অর্ডার করুণ
-                  </button>
+                  </button> */}
 
-                  <p className="text-sm font-normal text-gray-500">
-                    One or more items in your cart require an account.{" "}
-                    <Link
-                      to="/login"
-                      title=""
-                      className="font-medium text-primary-700 underline hover:no-underline"
-                    >
-                      Sign in or create an account now.
-                    </Link>
-                    .
-                  </p>
+                 
                 </div>
               </div>
             </div>
@@ -428,6 +421,26 @@ const Checkout = () => {
                         calculateDeliveryCharge(formData.deliveryArea)}
                     </dd>
                   </dl>
+                  <dl className="flex items-center justify-between gap-4 py-3">
+                    <button
+                    type="submit"
+                    className="cursor-pointer flex w-full items-center justify-center rounded-lg bg-[#BA0001] px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 text-xl"
+                  >
+                    অর্ডার করুণ
+                  </button>
+                  
+                  </dl>
+                   <p className="text-sm font-normal text-gray-500">
+                    One or more items in your cart require an account.{" "}
+                    <Link
+                      to="/login"
+                      title=""
+                      className="font-medium text-primary-700 underline hover:no-underline"
+                    >
+                      Sign in or create an account now.
+                    </Link>
+                    .
+                  </p>
                 </div>
               </div>
             </div>

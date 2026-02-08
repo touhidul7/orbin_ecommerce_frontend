@@ -4,15 +4,17 @@ import Products from '../components/Products';
 import ProductsByClass from '../components/ProductsByClass';
 import FeaturedCategories from '../components/FeaturedCategories';
 import EidCollections from '../components/EidCollections';
+import OutletLocationHero from '../components/OutletLocationHero';
 
 const Home = () => {
     return (
         <div>
             <Hero />
             <FeaturedCategories />
-            <EidCollections />
+            {/* <EidCollections /> */}
             <ProductsByClass/>
             {/* <Products /> */}
+            <OutletLocationHero/>
         </div>
     );
 };

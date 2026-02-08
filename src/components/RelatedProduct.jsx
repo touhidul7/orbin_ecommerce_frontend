@@ -7,7 +7,7 @@ const RelatedProduct = ({ products, loading }) => {
 
   return (
     <div style={{ marginTop: "30px" }}>
-      <div class="container mx-auto px-8">
+      <div class="px-8">
     
         <div class="mb-4 flex items-center justify-between gap-4 md:mb-8">
           <h2 class="text-xl font-semibold text-gray-900  sm:text-2xl">

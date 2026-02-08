@@ -1,18 +1,8 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
 import "./featured-categories.css";
+import { Link } from "react-router-dom";
 
-const categories = [
-  { title: "SACCHI", img: "/images/sacchi.png" },
-  { title: "LOAFER", img: "/images/loafer.png" },
-  { title: "FORMAL SHOES", img: "/images/formal-shoes.png" },
-  { title: "CASUAL SHOES", img: "/images/casual-shoes.png" },
-  { title: "CYCLE SHOES", img: "/images/cycle-shoes.png" },
-  { title: "HALF LOAFER", img: "/images/half-loafer.png" },
-  { title: "TARSAL", img: "/images/tarsal.png" },
-  { title: "SANDAL", img: "/images/sandal.png" },
-  { title: "BOOT", img: "/images/boot.png" },
-  { title: "WALLETS", img: "/images/wallets.png", logoText: "NEXO" },
-];
 
 function BrandMark({ variant = "R" }) {
   return (
@@ -24,6 +14,33 @@ function BrandMark({ variant = "R" }) {
 }
 
 export default function FeaturedCategories() {
+  // Base URL Setup
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
+  // category data load
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch categories data
+  const loadCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${BASE_URL}/products/categories`);
+      const result = await response.json();
+      setCategories(result[0] || []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    loadCategories()
+  }, [])
+
+  console.log(categories);
+
+
   return (
     <section className="fc-wrap">
       <header className="fc-header">
@@ -32,8 +49,8 @@ export default function FeaturedCategories() {
       </header>
 
       <div className="fc-grid">
-        {categories.map((c) => (
-          <button key={c.title} className="fc-card" type="button">
+        {categories?.map((c) => (
+          <Link to={`/category/${c.name}`} key={c.name} className="fc-card" type="button">
             <div className="fc-inner">
               <div className="fc-logo">
                 {c.logoText ? <BrandMark variant={c.logoText} /> : <BrandMark />}
@@ -43,8 +60,8 @@ export default function FeaturedCategories() {
                 {/* Replace with your real product images */}
                 <img
                   className="fc-img"
-                  src={c.img}
-                  alt={c.title}
+                  src={c.category_image ? `${IMAGE_URL}/admin/category/${c.category_image}` : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'}
+                  alt={c.name}
                   onError={(e) => {
                     // fallback if image not found
                     e.currentTarget.style.display = "none";
@@ -53,12 +70,12 @@ export default function FeaturedCategories() {
               </div>
             </div>
 
-            <div className="fc-label">{c.title}</div>
-          </button>
+            <div className="fc-label">{c.name}</div>
+          </Link>
         ))}
       </div>
 
-      <button className="fc-showMore" type="button">
+      {/* <button className="fc-showMore" type="button">
         <span>Show More</span>
         <svg
           className="fc-arrow"
@@ -76,7 +93,7 @@ export default function FeaturedCategories() {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </button> */}
     </section>
   );
 }

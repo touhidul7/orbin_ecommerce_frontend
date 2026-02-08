@@ -83,15 +83,15 @@ const Cart = () => {
 
   // console.log(cart);
   return (
-    <section className="bg-white py-8 antialiased md:py-16 lg:px-10">
+    <section className="bg-white py-8 antialiased">
       {cart.length === 0 ? (
         <Alert />
       ) : (
-        <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            Shopping Cart
-          </h2>
-          <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+        <div className="">
+          <div class="text-center p-10 bg-[#BA0001] mt-10">
+            <h1 class="font-bold text-4xl mb-4 text-white">Shopping Cart</h1>
+          </div>
+          <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8 px-5">
             <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
               <div className="space-y-6">
                 {cart.map((item) => (
@@ -209,9 +209,9 @@ const Cart = () => {
                 </div>
                 <Link
                   to="/checkout"
-                  className="flex w-full items-center justify-center rounded-lg bg-[#2A59FF] px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                >
-                  Proceed to Checkout
+                  className="flex w-full items-center justify-center rounded-lg bg-[#BA0001] px-5 py-3.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 text-xl"
+                > 
+                  ক্যাশ অন ডেলিভারিতে অর্ডার করুন
                 </Link>
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-sm font-normal text-gray-500">

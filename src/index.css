@@ -76,3 +76,31 @@ body {
 .penthrough{
   text-decoration: line-through;
 }
+
+/* Custom Design For Product Hover */
+/* .custom-hover-for-product {
+  position: relative;
+  padding-bottom: 56px;
+}
+
+.order-button-hover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.custom-hover-for-product:hover .order-button-hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+} */
+

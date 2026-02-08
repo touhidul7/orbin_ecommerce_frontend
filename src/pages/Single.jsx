@@ -7,6 +7,7 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { RiMessengerLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
 import toast from "react-hot-toast";
+import ProductDisclaimerTrust from "../components/ProductDisclaimerTrust";
 // import ReactPixel from 'react-facebook-pixel';
 
 const Single = () => {
@@ -212,7 +213,7 @@ const Single = () => {
       }
     }); */
 
-    orderNow(data, selectedColor?.code,selectedSize || null);
+    orderNow(data, selectedColor?.code, selectedSize || null);
   };
 
   useEffect(() => {
@@ -229,11 +230,11 @@ const Single = () => {
         </div>
       ) : (
         <div>
-          <div className="bg-gray-100 py-8">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white-100 py-8 mt-8">
+            <div className=" mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col md:flex-row -mx-4 align-center">
                 <div className="md:flex-1 px-4">
-                  <div className="lg:h-[460px] rounded-lg bg-white mb-4">
+                  <div className="lg:h-[460px] rounded-lg bg-white mb-4 border border-gray-100 p-2">
                     <img
                       className="w-full lg:h-full h-auto object-cover"
                       src={
@@ -271,26 +272,26 @@ const Single = () => {
                   </div>
                 </div>
                 <div className="md:flex-1 px-4">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                    {data.product_name}
-                  </h2>
                   <p className="text-gray-600 text-sm mb-4">
                     {data.select_category}
                   </p>
+                  <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                    {data.product_name}
+                  </h2>
                   <div className="flex mb-4">
                     <div className="mr-4">
-                      <span className="font-bold text-gray-700">Price: </span>
-                      <span className="text-gray-600 text-xl font-semibold">
+                      {/* <span className="font-bold text-gray-700">Price: </span> */}
+                      <span className="text-gray-800 text-2xl font-semibold">
                         ৳ {data.selling_price}
                       </span>
                       {data.regular_price && (
-                        <span className="line-through ml-2 text-red-500 text-sm">
+                        <span className="line-through ml-2 text-red-500 text-xl">
                           ৳{data.regular_price}
                         </span>
                       )}
                     </div>
                     <div>
-                      <span className="font-bold text-gray-700">
+                      <span className="font-bold text-gray-700 text-xl">
                         Availability:{" "}
                       </span>
                       <span className="text-gray-600">{data.availability}</span>
@@ -355,10 +356,19 @@ const Single = () => {
                       )}
                     </div>
                   )}
-                  <div className="flex justify-items-stretch gap-4 lg:-mx-2 mb-4 pt-8">
+                  <div className="w-full my-4">
+                    <button
+                      onClick={handleOrderNow}
+                      className="w-full bg-[#AD0101] text-white py-3 rounded px-4 font-bold hover:bg-[#f6a503] cursor-pointer flex gap-2 justify-center items-center transition-colors"
+                    >
+                      <FaCartShopping size={25} /> ক্যাশ অন ডেলিভারিতে অর্ডার
+                      করুণ
+                    </button>
+                  </div>
+                  <div className="flex gap-4 mb-4">
                     <div className="w-full">
                       {isInCart ? (
-                        <button className="bg-[black] text-white font-bold h-full rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full">
+                        <button class="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full">
                           <Link to="/cart" className="py-2 h-full px-4 w-full">
                             কার্ট দেখুন
                           </Link>
@@ -375,33 +385,25 @@ const Single = () => {
                     <div className="w-full">
                       <button
                         onClick={handleOrderNow}
-                        className="bg-[#ffff00] text-black font-bold py-2 px-4 rounded-md hover:bg-[#ffff00] hover:text-black transition duration-300 cursor-pointer w-full"
+                        className="bg-[#00A63E] text-white font-bold py-2 px-4 rounded-md hover:bg-[#ffff00] hover:text-black transition duration-300 cursor-pointer w-full"
                       >
                         অর্ডার করুন
                       </button>
                     </div>
                   </div>
-                  <div className="w-full my-4">
-                    <button
-                      onClick={handleOrderNow}
-                      className="w-full bg-[#F69603] text-black py-2 px-4 font-bold hover:bg-[#f6a503] cursor-pointer flex gap-2 justify-center items-center transition-colors"
-                    >
-                      <FaCartShopping size={25} /> ক্যাশ অন ডেলিভারিতে অর্ডার
-                      করুণ
-                    </button>
-                  </div>
+                  
                   <div className="w-full flex gap-2">
                     <Link
                       target="_blank"
                       to="https://wa.me/+8801851003265"
-                      className="w-full bg-[#25D366] text-white py-2 px-4 font-bold hover:bg-[#25d365d0] cursor-pointer flex gap-2 justify-center items-center transition-colors"
+                      className="w-full bg-[#25D366] text-white py-2 px-4 font-bold hover:bg-[#25d365d0] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
                     >
                       <IoLogoWhatsapp size={25} /> WhatsApp
                     </Link>
                     <Link
                       target="_blank"
                       to="https://web.facebook.com/messages/t/116061797769426/"
-                      className="w-full bg-[#0863F7] text-white py-2 px-4 font-bold hover:bg-[#0864f7c9] cursor-pointer flex gap-2 justify-center items-center transition-colors"
+                      className="w-full bg-[#0863F7] text-white py-2 px-4 font-bold hover:bg-[#0864f7c9] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
                     >
                       <RiMessengerLine size={25} /> Messenger
                     </Link>
@@ -409,7 +411,10 @@ const Single = () => {
                 </div>
               </div>
 
-              <div className="lg:py-8">
+                {/* Disclaimer */}
+                <ProductDisclaimerTrust/>
+
+              <div className="lg:py-8 rounded border border-slate-200 bg-white p-4 sm:p-5 shadow-sm mt-5">
                 <div className="text-2xl font-bold text-gray-800">
                   Description
                 </div>

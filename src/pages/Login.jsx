@@ -3,6 +3,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { doSignInWithEmailAndPassword } from '../firebase/auth';
+import Header from '../components/Header';
+import MainFooter from '../components/MainFooter';
 
 const Login = () => {
     const authContext = useAuth();
@@ -35,16 +37,17 @@ const Login = () => {
 
     return (
         <div>
+           <Header/>
             {userLoggedIn && (<Navigate to={"/"} replace={true} />)}
             <section class="py-10 bg-gray-50 sm:py-16 lg:py-24">
                 <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div class="max-w-2xl mx-auto text-center">
-                        <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Login Here!</h2>
-                        <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600">Login to your account</p>
+                        <h2 class="text-2xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl mt-10">Login Here!</h2>
+                        {/* <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600">Login to your account</p> */}
                     </div>
-                    <div class="relative max-w-md mx-auto mt-8 md:mt-16">
+                    <div class="relative max-w-md mx-auto md:mt-8">
                         <div class="overflow-hidden bg-white rounded-md shadow-md">
-                            <div class="px-4 py-6 sm:px-8 sm:py-7">
+                            <div class="px-4 sm:px-8 sm:py-7">
                                 <form action="#" onSubmit={handleSubmit}>
                                     <div class="space-y-5">
                                         <div>
@@ -95,7 +98,7 @@ const Login = () => {
                                         </div>
 
                                         <div>
-                                            <button type="submit" class="cursor-pointer inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700">
+                                            <button type="submit" class="cursor-pointer inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700 bg-[#AD0101]">
                                                 Log in
                                             </button>
                                         </div>
@@ -111,6 +114,7 @@ const Login = () => {
                 </div>
             </section>
             <Toaster />
+            <MainFooter/>
         </div>
     );
 };

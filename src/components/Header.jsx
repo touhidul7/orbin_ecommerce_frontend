@@ -93,6 +93,9 @@ const Header = ({ menuopen, setMenuOpen }) => {
       onClick={() => (menuopen ? setMenuOpen(false) : "")}
     >
       <header>
+        <div>
+          <h5 className="text-center bg-[#ad0101] text-white py-2">Order with confidence- Easy exchange, No worries</h5>
+        </div>
         <div className="bg-white border-b border-gray-100">
           <div className="px-4 mx-auto sm:px-6 lg:px-8">
             <nav className="relative flex items-center justify-between h-16 lg:h-20">

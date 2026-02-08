@@ -46,7 +46,7 @@ const Hero = () => {
               </div>
             ) : (
               <>
-                {data[0].map(item => {
+                {data[0]?.map(item => {
                   return (
                     <>
                       <Link to={`/category/${item.name}`} class="flex items-center rounded-md text-center  bg-[#00A651] border-1  px-4 py-2 hover:bg-[#00a62c]  border-white ">

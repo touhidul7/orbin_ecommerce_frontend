@@ -30,12 +30,13 @@ const ProductsByClass = () => {
   const trandingProducts = data.filter(product => product.type === "Tranding Product");
 
   return (
-    <div style={{ marginTop: "50px" }}>
-      <div className="container mx-auto lg:px-8 px-2">
-        <div className="mb-4 flex lg:px-10 items-center justify-between gap-4 md:mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            Popular Products
-          </h2>
+    <div>
+      <div className="fc-wrap">
+        <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
+          <header className="fc-header">
+            <h2 className="fc-title">POPULAR CATEGORIES</h2>
+            <div className="fc-underline" />
+          </header>
           <Link
             to={"/shop"}
             className="flex items-center text-base font-medium text-gray-900 hover:underline"
@@ -60,28 +61,76 @@ const ProductsByClass = () => {
             </svg>
           </Link>
         </div>
-        
-        <ProductSection loading={loading} data={popularProducts}/>
+
+        <ProductSection loading={loading} data={popularProducts} />
       </div>
-      
-      <div className="container mx-auto lg:px-8 px-2 mt-8">
-        <div className="mb-4 flex lg:px-10 items-center justify-between gap-4 md:mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            New Arrival
-          </h2>
+
+      <div style={{marginTop:'40px'}} className="fc-wrap">
+        <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
+          <header className="fc-header">
+            <h2 className="fc-title">NEW ARRIAVAL</h2>
+            <div className="fc-underline" />
+          </header>
+          <Link
+            to={"/shop"}
+            className="flex items-center text-base font-medium text-gray-900 hover:underline"
+          >
+            See more products
+            <svg
+              className="ms-1 h-5 w-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 12H5m14 0-4 4m4-4-4-4"
+              />
+            </svg>
+          </Link>
         </div>
-        
-        <ProductSection loading={loading} data={newArrivalProducts}/>
+
+        <ProductSection loading={loading} data={newArrivalProducts} />
       </div>
-      
-      <div className="container mx-auto lg:px-8 px-2 mt-8">
-        <div className="mb-4 flex lg:px-10 items-center justify-between gap-4 md:mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            Tranding Product
-          </h2>
+
+      <div className="fc-wrap">
+        <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
+          <header className="fc-header">
+            <h2 className="fc-title">TRANDING PRODUCT</h2>
+            <div className="fc-underline" />
+          </header>
+          <Link
+            to={"/shop"}
+            className="flex items-center text-base font-medium text-gray-900 hover:underline"
+          >
+            See more products
+            <svg
+              className="ms-1 h-5 w-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 12H5m14 0-4 4m4-4-4-4"
+              />
+            </svg>
+          </Link>
         </div>
-        
-        <ProductSection loading={loading} data={trandingProducts}/>
+
+        <ProductSection loading={loading} data={trandingProducts} />
       </div>
     </div>
   );
