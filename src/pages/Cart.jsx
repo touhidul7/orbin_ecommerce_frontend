@@ -83,12 +83,12 @@ const Cart = () => {
 
   // console.log(cart);
   return (
-    <section className="bg-white py-8 antialiased">
+    <section className="bg-white py-8 antialiased pt-20">
       {cart.length === 0 ? (
         <Alert />
       ) : (
         <div className="">
-          <div class="text-center p-10 bg-[#BA0001] mt-10">
+          <div class="text-center p-10 bg-[#BA0001]">
             <h1 class="font-bold text-4xl mb-4 text-white">Shopping Cart</h1>
           </div>
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8 px-5">

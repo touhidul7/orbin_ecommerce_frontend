@@ -36,7 +36,7 @@ const OrderSuccessPopup = ({clearSuccess}) => {
 
   return (
     <div>
-      <section class="bg-white py-8 antialiased ">
+      <section class="bg-white py-8 antialiased">
         <div class="mx-auto max-w-2xl px-4 2xl:px-0">
           <h2 class="text-xl font-semibold text-gray-900  sm:text-2xl mb-2">
             Thanks for your order!
