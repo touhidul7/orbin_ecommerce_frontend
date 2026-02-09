@@ -43,7 +43,7 @@ export default function FeaturedCategories() {
 
   return (
     <section className="fc-wrap">
-      <header className="fc-header">
+      <header className="fc-header mt-18">
         <h2 className="fc-title">FEATURED CATEGORIES</h2>
         <div className="fc-underline" />
       </header>

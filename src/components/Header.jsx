@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import Loader from "./Loader";
 import { IoCartOutline } from "react-icons/io5";
+import ProductSearch from "./ProductSearch";
 
 const Header = ({ menuopen, setMenuOpen }) => {
   const { cart, user } = useContext(CartContext);
@@ -11,7 +12,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
   const [categories, setCategories] = useState([]);
   const [localOrderData, setLocalOrderData] = useState([]);
   const [subCategories, setSubCategories] = useState({});
-  const [accountOpen, setAccountOpen] = useState(false);
+  // const [accountOpen, setAccountOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -137,7 +138,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
       <header>
         {/* Top bar */}
         <div
-          className="text-center text-white py-2 text-[12px] font-medium"
+          className="text-center text-white py-2 text-[18px] font-medium"
           style={{ backgroundColor: COLORS.topBar }}
         >
           Order with confidence- Easy exchange, No worries
@@ -198,7 +199,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                 </div>
 
                 <span
-                  className="ml-2 text-[14px] font-extrabold tracking-wide"
+                  className="cursor-pointer ml-2 text-[14px] font-extrabold tracking-wide"
                   style={{ color: COLORS.accent }}
                 >
                   HOT OFFER
@@ -209,8 +210,8 @@ const Header = ({ menuopen, setMenuOpen }) => {
               <div className="flex-shrink-0">
                 <Link to="/" className="flex items-center gap-2">
                   <img
-                    className="w-auto h-8 lg:h-10"
-                    src="https://orbin-beta.vercel.app/logo.png"
+                    className="w-auto h-8 lg:h-10 rounded-md"
+                    src="../../image.png"
                     alt="Logo"
                   />
                 </Link>
@@ -220,7 +221,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
               <div className="flex items-center gap-4 lg:gap-5">
                 {/* Search (desktop) */}
                 <div className="relative hidden md:flex w-[320px] lg:w-[380px]">
-                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#053A47]/70">
+                  {/* <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#053A47]/70">
                     <svg
                       className="w-4 h-4"
                       viewBox="0 0 24 24"
@@ -245,7 +246,10 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     placeholder="Search products..."
                     className="h-10 w-full rounded-full bg-white pl-11 pr-4 text-[13px] text-[#053A47] placeholder:text-[#053A47]/50 outline-none ring-1 ring-white/10 focus:ring-2"
                     style={{ boxShadow: "0 0 0 0px transparent" }}
-                  />
+                  /> */}
+
+                  <ProductSearch/>
+                  
                 </div>
 
                 {/* Desktop account + icons */}
@@ -270,89 +274,39 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     </svg>
                   </Link>
 
-     <div className="w-full">
-  <button
-    type="button"
-    onClick={() => {
-      setAccountOpen((s) => !s);
-      // ensure items become visible even on small screens
-      setTimeout(() => {
-        const el = document.getElementById("mobile-account-items");
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }, 0);
-    }}
-    className="w-full py-2 text-base font-medium text-white flex items-center justify-between"
-  >
-    <span>Account</span>
-    <svg
-      className={`w-4 h-4 text-white transition-transform ${
-        accountOpen ? "rotate-180" : ""
-      }`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M19 9l-7 7-7-7"
-      />
-    </svg>
-  </button>
-
-  {/* Animated container to avoid clipping */}
-  <div
-    className={`grid transition-all duration-200 ${
-      accountOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-    }`}
-  >
-    <div className="overflow-hidden">
-      <div id="mobile-account-items" className="pl-4 pb-2">
-        {user?.user?.uid ? (
-          <Link
-            to="/account"
-            className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-            onClick={() => {
-              setMenuOpen(false);
-              setAccountOpen(false);
-            }}
-          >
-            My Account
-          </Link>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/register"
-              className="block w-full py-2 text-sm text-white/90 hover:bg-white/10 rounded px-2"
-              onClick={() => {
-                setMenuOpen(false);
-                setAccountOpen(false);
-              }}
-            >
-              Register
-            </Link>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-</div>
-
-
+                  {/* Account */}
+                  <div className="w-full space-y-1">
+                    {user?.user?.uid ? (
+                      <Link
+                        to="/account"
+                        className="block w-full py-2 text-base font-medium text-white hover:bg-white/10 rounded px-2"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        Account
+                      </Link>
+                    ) : (
+                      <>
+                        <div className="flex items-center">
+                          <Link
+                            to="/register"
+                            className="block w-full py-2 text-base font-medium text-white hover:bg-white/10 rounded px-2"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            Login / Register
+                          </Link>
+                            
+                          {/* <Link
+                            to="/register"
+                            className="block w-full py-2 text-base font-medium text-white hover:bg-white/10 rounded px-2"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            Register
+                          </Link> */}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
-
                 {/* Mobile cart */}
                 <Link
                   to="/cart"
@@ -398,7 +352,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
         </div>
 
         {/* Category nav (desktop) */}
-        <div className="bg-white border-b border-gray-100 hidden lg:block">
+        <div className="bg-white border-b border-t border-gray-300 hidden lg:block">
           <div className="px-4 mx-auto sm:px-6 lg:px-8">
             <div className="flex h-12 items-center justify-center gap-7">
               {categories.map((category) => {
@@ -417,13 +371,13 @@ const Header = ({ menuopen, setMenuOpen }) => {
                   >
                     <Link
                       to={`/category/${category.name}`}
-                      className="text-[12px] font-medium tracking-wide text-[#1f2a2e] hover:underline"
+                      className="text-[16px] font-bold tracking-wide text-[#1f2a2e] hover:underline"
                       style={{ textDecorationColor: COLORS.accent }}
                     >
                       <span className="inline-flex items-center gap-1">
                         {category.name}
                         {/* show arrow if loading or has items */}
-                        {(val === null || hasItems) && (
+                        {/* {(val === null || hasItems) && (
                           <svg
                             className="w-4 h-4"
                             fill="none"
@@ -438,7 +392,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                               d="M19 9l-7 7-7-7"
                             />
                           </svg>
-                        )}
+                        )} */}
                       </span>
                     </Link>
 
@@ -542,9 +496,8 @@ const Header = ({ menuopen, setMenuOpen }) => {
                         {category.name}
                         {(val === null || hasItems) && (
                           <svg
-                            className={`w-4 h-4 text-white transition-transform ${
-                              expanded ? "rotate-180" : ""
-                            }`}
+                            className={`w-4 h-4 text-white transition-transform ${expanded ? "rotate-180" : ""
+                              }`}
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

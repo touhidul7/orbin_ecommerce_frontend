@@ -230,7 +230,7 @@ const Single = () => {
         </div>
       ) : (
         <div>
-          <div className="bg-white-100 py-8 mt-8">
+          <div className="bg-white-100 py-8 mt-10 pt-25">
             <div className=" mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col md:flex-row -mx-4 align-center">
                 <div className="md:flex-1 px-4">

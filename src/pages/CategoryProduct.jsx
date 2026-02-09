@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import ProductSection from "../components/ProductSection";
+import CategoryProductComponent from "../components/CategoryProductComponent";
 
 const CategoryProduct = () => {
   const { id } = useParams();
@@ -31,11 +32,11 @@ const CategoryProduct = () => {
   }, [id]);
   return (
     <div>
-      <div class="text-center p-10 bg-[#BA0001] mt-10">
+      <div class="text-center p-10 bg-[#BA0001] mt-23 pt-15">
         <h1 class="font-bold text-4xl mb-4 text-white">{id.toUpperCase()}</h1>
       </div>
       <div className="mt-16 lg:px-8">
-        <ProductSection loading={loading} data={data[0]} />
+        <CategoryProductComponent loading={loading} data={data[0]} />
       </div>
     </div>
   );

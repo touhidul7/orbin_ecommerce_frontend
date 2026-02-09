@@ -8,7 +8,7 @@ import React from "react";
  */
 export default function OutletLocationHero({
   backgroundUrl =
-    "../../public/out-let.jpg",
+    "../../out-let.jpg",
   onView = () => {},
 }) {
   return (
