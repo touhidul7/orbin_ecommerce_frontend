@@ -109,7 +109,7 @@ export default function ProductSearch() {
         }}
         type="text"
         placeholder="Search products..."
-        className="h-10 w-full rounded-full bg-white pl-11 pr-4 text-[13px] text-[#053A47] placeholder:text-[#053A47]/50 outline-none ring-1 ring-white/10 focus:ring-2"
+        className="h-10 w-full rounded-full bg-white pl-11 pr-4 text-[18px] text-[#053A47] placeholder:text-[#053A47]/50 outline-none ring-1 ring-white/10 focus:ring-2"
       />
 
       {/* Suggestions dropdown */}

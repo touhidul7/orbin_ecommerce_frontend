@@ -152,7 +152,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
               <div className="hidden lg:flex items-center gap-6 text-white/90">
                 <Link
                   to="/stores"
-                  className="flex items-center gap-2 text-[13px] hover:text-white"
+                  className="flex items-center gap-2 text-[18px] hover:text-white"
                 >
                   <svg
                     className="w-4 h-4"
@@ -191,15 +191,15 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     />
                   </svg>
                   <div className="leading-tight">
-                    <div className="text-[11px] text-white/70">
+                    <div className="text-[18px] text-white/70">
                       Customer Care
                     </div>
-                    <div className="font-semibold">+88 01709306560</div>
+                    <div className="font-semibold text-[18px]">+88 01709306560</div>
                   </div>
                 </div>
 
                 <span
-                  className="cursor-pointer ml-2 text-[14px] font-extrabold tracking-wide"
+                  className="cursor-pointer ml-2 text-[18px] font-extrabold tracking-wide"
                   style={{ color: COLORS.accent }}
                 >
                   HOT OFFER
@@ -244,7 +244,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="h-10 w-full rounded-full bg-white pl-11 pr-4 text-[13px] text-[#053A47] placeholder:text-[#053A47]/50 outline-none ring-1 ring-white/10 focus:ring-2"
+                    className="h-10 w-full rounded-full bg-white pl-11 pr-4 text-[18px] text-[#053A47] placeholder:text-[#053A47]/50 outline-none ring-1 ring-white/10 focus:ring-2"
                     style={{ boxShadow: "0 0 0 0px transparent" }}
                   /> */}
 
@@ -260,11 +260,11 @@ const Header = ({ menuopen, setMenuOpen }) => {
                         {cart.length > 0 ? cart.length : 0}
                       </p>
                     </div>
-                    <IoCartOutline size={22} />
+                    <IoCartOutline size={25} />
                   </Link>
 
                   <Link to="/wishlist" className="hover:text-white">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M12 21s-7-4.6-9.5-9A5.7 5.7 0 0 1 12 5a5.7 5.7 0 0 1 9.5 7c-2.5 4.4-9.5 9-9.5 9Z"
                         stroke="currentColor"
@@ -279,7 +279,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     {user?.user?.uid ? (
                       <Link
                         to="/account"
-                        className="block w-full py-2 text-base font-medium text-white hover:bg-white/10 rounded px-2"
+                        className="text-[18px] block w-full py-2 text-base font-medium text-white hover:bg-white/10 rounded px-2"
                         onClick={() => setMenuOpen(false)}
                       >
                         Account
@@ -371,10 +371,10 @@ const Header = ({ menuopen, setMenuOpen }) => {
                   >
                     <Link
                       to={`/category/${category.name}`}
-                      className="text-[16px] font-bold tracking-wide text-[#1f2a2e] hover:underline"
+                      className="text-[16px] font-bold tracking-wide text-[#1f2a2e] hover:underline uppercase"
                       style={{ textDecorationColor: COLORS.accent }}
                     >
-                      <span className="inline-flex items-center gap-1">
+                      <span className="inline-flex items-center gap-1 uppercase">
                         {category.name}
                         {/* show arrow if loading or has items */}
                         {/* {(val === null || hasItems) && (
@@ -413,7 +413,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                               <Link
                                 key={subCat}
                                 to={`/sub-category/${category.name}/${subCat}`}
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 capitalize"
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 uppercase"
                               >
                                 {subCat}
                               </Link>
@@ -557,6 +557,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
                     className="py-2 text-base font-medium text-white transition-all duration-200"
                     onClick={() => setMenuOpen(false)}
                   >
+                   
                     Account
                   </Link>
                 ) : (

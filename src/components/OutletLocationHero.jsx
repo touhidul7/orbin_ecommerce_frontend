@@ -49,14 +49,14 @@ export default function OutletLocationHero({
                 type="button"
                 onClick={onView}
                 className={
-                  "mt-6 inline-flex items-center justify-center rounded-xl px-10 py-3 " +
+                  "mt-6 inline-flex items-center justify-center rounded-xl px-10 py-3 cursor-pointer" +
                   "text-sm font-semibold text-white bg-red-600 " +
                   "shadow-[0_12px_30px_rgba(220,38,38,0.35)] " +
                   "transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] " +
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40 cursor-pointer"
                 }
               >
-                VIEW
+                OUTLET LOCATION
               </button>
             </div>
           </div>
