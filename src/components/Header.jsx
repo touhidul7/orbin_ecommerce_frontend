@@ -825,7 +825,7 @@ const Header = ({ menuopen, setMenuOpen }) => {
               </div>
 
               {/* Center: Logo */}
-              <div className="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 lg:static lg:transform-none">
+              <div className=" ml-10">
                 <Link to="/" className="flex items-center gap-2">
                   <img
                     className="w-auto h-8 lg:h-10 rounded-md"
