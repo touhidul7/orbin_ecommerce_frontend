@@ -245,7 +245,7 @@ const Checkout = () => {
   return (
     <>
       <section className="bg-white py-8 antialiased">
-          <div class="text-center p-10 bg-[#BA0001] mt-10">
+          <div class="text-center p-10 bg-[#BA0001] mt-10 pt-20">
             <h1 class="font-bold text-4xl mb-4 text-white">Checkout</h1>
           </div>
         <form

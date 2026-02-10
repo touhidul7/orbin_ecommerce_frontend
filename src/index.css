@@ -104,3 +104,51 @@ body {
   transform: translateY(0);
 } */
 
+.product-swiper .swiper-button-next,
+.product-swiper .swiper-button-prev {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.product-swiper .swiper-button-next:after,
+.product-swiper .swiper-button-prev:after {
+  font-size: 16px;
+  color: #111;
+  font-weight: 700;
+}
+
+/* Product hover effect */
+/* initial hidden state */
+.custom-button,
+.custom-color {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s ease;
+}
+
+/* BUTTON: slide UP (bottom → top) */
+.custom-button {
+  transform: translateY(20px);
+}
+
+/* COLOR: slide DOWN (top → bottom) */
+.custom-color {
+  transform: translateY(-20px);
+}
+
+/* on hover */
+.product-group:hover .custom-button {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.product-group:hover .custom-color {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.bg-[#193CB8]

@@ -39,7 +39,7 @@ export default function MainFooter({
   devName = "Sadhin Hossain",
 }) {
   return (
-    <footer className="bg-[#053844] text-white">
+    <footer className="bg-gradient-to-b from-[#FCCCD8] to-[#FFFFFF] text-[black]">
       {/* Top */}
       <div className="mx-auto max-w-7xl px-6 py-14">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
@@ -50,24 +50,24 @@ export default function MainFooter({
               <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#0a4a58]">
                 <span className="text-xl font-extrabold text-[#f7c948]">R</span>
               </div>
-              <div className="text-2xl font-extrabold text-[#f7c948]">
+              <div className="text-2xl font-extrabold text-[black]">
                 {brandName}
               </div>
             </div>
 
-            <p className="mt-5 max-w-sm text-sm leading-6 text-white/80">
+            <p className="mt-5 max-w-sm text-lg leading-6 text-black">
               {description}
             </p>
 
-            <div className="mt-7 flex items-center gap-4">
+            <div className="mt-7 flex items-center gap-4 text-black">
               <SocialIcon href="#" label="Facebook">
-                <Facebook className="h-5 w-5" />
+                <Facebook className="h-10 w-10 bg-black text-white p-2 rounded" />
               </SocialIcon>
               <SocialIcon href="#" label="Instagram">
-                <Instagram className="h-5 w-5" />
+                <Instagram className="h-10 w-10 bg-black text-white p-2 rounded" />
               </SocialIcon>
               <SocialIcon href="#" label="YouTube">
-                <Youtube className="h-5 w-5" />
+                <Youtube className="h-10 w-10 bg-black text-white p-2 rounded" />
               </SocialIcon>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function MainFooter({
                 <li key={l.label}>
                   <a
                     href={l.href}
-                    className="text-sm text-white/80 transition-colors hover:text-white"
+                    className="text-lg text-black transition-colors hover:text-black"
                   >
                     {l.label}
                   </a>
@@ -95,7 +95,7 @@ export default function MainFooter({
                 <li key={c.label}>
                   <a
                     href={c.href}
-                    className="text-sm text-white/80 transition-colors hover:text-white"
+                    className="text-lg text-black transition-colors hover:text-black"
                   >
                     {c.label}
                   </a>
@@ -107,17 +107,17 @@ export default function MainFooter({
           {/* Get in touch */}
           <FooterColumn title="Get In Touch">
             <div className="mt-6 space-y-4">
-              <InfoRow
-                icon={<MapPin className="h-5 w-5" />}
+              <InfoRow 
+                icon={<MapPin className="h-5 w-5 text-black" />}
                 text={address}
               />
               <InfoRow
-                icon={<Phone className="h-5 w-5" />}
+                icon={<Phone className="h-5 w-5 text-black" />}
                 text={phone}
                 href={`tel:${phone.replace(/\s+/g, "")}`}
               />
               <InfoRow
-                icon={<Mail className="h-5 w-5" />}
+                icon={<Mail className="h-5 w-5 text-black" />}
                 text={email}
                 href={`mailto:${email}`}
               />
@@ -127,14 +127,14 @@ export default function MainFooter({
       </div>
 
       {/* Divider */}
-      <div className="h-px w-full bg-white/10" />
+      <div className="h-px w-full bg-black" />
 
       {/* Bottom */}
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Payments */}
           <div>
-            <div className="text-sm font-semibold tracking-wide text-[#f7c948]">
+            <div className="text-lg font-semibold tracking-wide text-[black]">
               SECURE PAYMENTS
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -151,7 +151,7 @@ export default function MainFooter({
               ].map((p) => (
                 <span
                   key={p}
-                  className="rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] text-white/85"
+                  className="rounded-md border border-black bg-black px-2.5 py-1 text-[11px] text-white"
                 >
                   {p}
                 </span>
@@ -160,28 +160,28 @@ export default function MainFooter({
           </div>
 
           {/* Policy + copyright */}
-          <div className="flex flex-col gap-4 text-sm text-white/70 lg:items-end">
+          <div className="flex flex-col gap-4 text-lg text-black lg:items-end">
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <a href="#" className="hover:text-white">
+              <a href="#" className="hover:text-black">
                 Privacy Policy
               </a>
-              <span className="text-white/30">|</span>
-              <a href="#" className="hover:text-white">
+              <span className="text-black">|</span>
+              <a href="#" className="hover:text-black">
                 Terms of Service
               </a>
-              <span className="text-white/30">|</span>
-              <a href="#" className="hover:text-white">
+              <span className="text-black">|</span>
+              <a href="#" className="hover:text-black">
                 Cookie Policy
               </a>
             </div>
 
             <div className="text-xs">
-              © {year} <span className="font-semibold text-white">RBIN</span>.
+              © {year} <span className="font-semibold text-black">RBIN</span>.
               <span className="ml-1">All rights reserved.</span>
-              <span className="mx-2 text-white/30">|</span>
+              <span className="mx-2 text-black">|</span>
               <span>
                 Designed and Develop by{" "}
-                <span className="font-semibold text-white">{devName}</span>
+                <span className="font-semibold text-black">{devName}</span>
               </span>
             </div>
           </div>
@@ -194,8 +194,8 @@ export default function MainFooter({
 function FooterColumn({ title, children }) {
   return (
     <div>
-      <div className="text-lg font-extrabold text-[#f7c948]">{title}</div>
-      <div className="mt-3 h-px w-full bg-white/10" />
+      <div className="text-lg font-extrabold text-black]">{title}</div>
+      <div className="mt-3 h-px w-full bg-black" />
       {children}
     </div>
   );
@@ -209,7 +209,7 @@ function SocialIcon({ href, label, children }) {
       className={
         "inline-flex h-10 w-10 items-center justify-center rounded-lg " +
         "border border-white/15 bg-white/5 text-white/85 " +
-        "transition hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        "transition hover:bg-black hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
       }
     >
       {children}
@@ -221,7 +221,7 @@ function InfoRow({ icon, text, href }) {
   const content = (
     <div className="flex items-start gap-3">
       <div className="mt-0.5 text-[#f7c948]">{icon}</div>
-      <div className="text-sm leading-6 text-white/80">{text}</div>
+      <div className="text-lg leading-6 text-black">{text}</div>
     </div>
   );
 

@@ -77,11 +77,12 @@ const OrderDtails = () => {
 
 
   return (
-    <section class="bg-white py-8 antialiased md:py-8">
+    <section class="bg-white py-8 antialiased md:py-8 mt-20">
       <div class="mx-auto max-w-screen-lg px-4 2xl:px-0">
         <h2 class="mb-4 text-xl font-semibold text-gray-900  sm:text-2xl md:mb-6">
           Order overview
         </h2>
+        
 
         <div>
           <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 ">

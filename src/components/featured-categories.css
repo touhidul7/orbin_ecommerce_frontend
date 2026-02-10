@@ -13,7 +13,8 @@
 
 .fc-wrap {
   background: var(--fc-bg);
-  padding: 24px 18px 28px;
+  padding-left: 24px;
+  padding-right: 24px;
  
   margin: 0 auto;
 }

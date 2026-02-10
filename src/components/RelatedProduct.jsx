@@ -1,5 +1,6 @@
 import React from "react";
 import ProductSection from "./ProductSection";
+import ProductSectionSlider from "./ProductSectionSlider";
 
 const RelatedProduct = ({ products, loading }) => {
   // const { addToCart, orderNow } = useContext(CartContext);
@@ -39,7 +40,7 @@ const RelatedProduct = ({ products, loading }) => {
             </svg>
           </a>
         </div>
-        <ProductSection data={products} loading={loading}/>
+        <ProductSectionSlider data={products} loading={loading}/>
       </div>
     </div>
   );

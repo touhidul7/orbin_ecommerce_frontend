@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductSection from "./ProductSection";
 import { Link } from "react-router-dom";
+import ProductSectionSlider from "./ProductSectionSlider";
 
 const ProductsByClass = () => {
   const [data, setData] = useState([]);
@@ -33,13 +34,13 @@ const ProductsByClass = () => {
     <div>
       <div className="fc-wrap">
         <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
-          <header className="fc-header">
-            <h2 className="fc-title">POPULAR CATEGORIES</h2>
+          <header className="fc-header mt-18">
+            <h2 className="fc-title ">POPULAR CATEGORIES</h2>
             <div className="fc-underline" />
           </header>
           <Link
             to={"/shop"}
-            className="flex items-center text-base font-medium text-gray-900 hover:underline"
+            className="flex items-center mt-15 text-base font-medium text-gray-900 hover:underline"
           >
             See more products
             <svg
@@ -62,10 +63,10 @@ const ProductsByClass = () => {
           </Link>
         </div>
 
-        <ProductSection loading={loading} data={popularProducts} />
+        <ProductSectionSlider loading={loading} data={popularProducts} />
       </div>
 
-      <div style={{marginTop:'40px'}} className="fc-wrap">
+      <div className="fc-wrap">
         <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
           <header className="fc-header">
             <h2 className="fc-title">NEW ARRIAVAL</h2>
@@ -96,7 +97,7 @@ const ProductsByClass = () => {
           </Link>
         </div>
 
-        <ProductSection loading={loading} data={newArrivalProducts} />
+        <ProductSectionSlider loading={loading} data={newArrivalProducts} />
       </div>
 
       <div className="fc-wrap">
@@ -130,7 +131,7 @@ const ProductsByClass = () => {
           </Link>
         </div>
 
-        <ProductSection loading={loading} data={trandingProducts} />
+        <ProductSectionSlider loading={loading} data={trandingProducts} />
       </div>
     </div>
   );
