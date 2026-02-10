@@ -40,7 +40,7 @@ const ProductsByClass = () => {
           </header>
           <Link
             to={"/shop"}
-            className="flex items-center text-base font-medium text-gray-900 hover:underline"
+            className="flex items-center mt-15 text-base font-medium text-gray-900 hover:underline"
           >
             See more products
             <svg
