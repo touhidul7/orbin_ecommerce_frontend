@@ -23,7 +23,7 @@ const Slider = () => {
       >
         {heroImages.images.map((img, index) => (
           <SwiperSlide key={index}>
-            <img className="w-full mt-5" src={img} alt={`slide-${index}`} />
+            <img className="w-full mt-25" src={img} alt={`slide-${index}`} />
           </SwiperSlide>
         ))}
       </Swiper>
