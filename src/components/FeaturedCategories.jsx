@@ -43,7 +43,7 @@ export default function FeaturedCategories() {
 
   return (
     <section className="fc-wrap">
-      <header className="fc-header mt-18">
+      <header className="fc-header mt-2">
         <h2 className="fc-title">FEATURED CATEGORIES</h2>
         <div className="fc-underline" />
       </header>
@@ -59,7 +59,7 @@ export default function FeaturedCategories() {
               <div className="fc-imgFrame">
                 {/* Replace with your real product images */}
                 <img
-                  className="fc-img"
+                  className=""
                   src={c.category_image ? `${IMAGE_URL}/admin/category/${c.category_image}` : 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg'}
                   alt={c.name}
                   onError={(e) => {
