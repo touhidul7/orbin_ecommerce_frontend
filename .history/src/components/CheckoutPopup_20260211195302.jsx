@@ -1,10 +1,26 @@
 /* eslint-disable no-unused-vars */
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { IoCloseOutline } from "react-icons/io5";
 import { CartContext } from "../context/CartContext";
 import OrderSuccessPopup from "./OrderSuccessPopup";
 
+/**
+ * ✅ CheckoutPopup with WORKING "Recommended for you" (Checkbox)
+ *
+ * Why recommendedList was Array(0):
+ * - Your cart items usually DON'T include `recommended_product`.
+ * - So we fetch FULL product details for each cart item id,
+ *   then build recommendations from those full products.
+ *
+ * Features:
+ * - Stable base snapshot when popup opens (recommendations won't disappear on toggle)
+ * - Recommended checkbox add/remove updates BOTH localStorage + CartContext
+ * - Subtotal/total always from CURRENT cart so updates instantly
+ * - Checkout uses CURRENT cart (includes checked recommended items)
+ */
+
+/** ---------------- helpers ---------------- */
 function safeJsonParse(value) {
   if (typeof value !== "string") return null;
   try {
@@ -14,60 +30,40 @@ function safeJsonParse(value) {
   }
 }
 
-// ✅ ULTIMATE FIX - Handles ALL possible API formats
-function extractRecommendedProducts(product) {
-  if (!product) return [];
-  
-  const result = [];
+function normalizeRecommendedProducts(product, options = { depth: 1 }) {
+  const { depth } = options;
   const seen = new Set();
-  
-  try {
-    let recData = product.recommended_product;
-    if (!recData) return [];
-    
-    // CASE 1: Already an array
-    if (Array.isArray(recData)) {
-      for (const item of recData) {
-        if (item && item.id) {
-          const id = Number(item.id);
-          if (!seen.has(id)) {
-            seen.add(id);
-            result.push(item);
-          }
-        }
-      }
+  const out = [];
+
+  const pushUnique = (p) => {
+    if (!p || typeof p !== "object") return;
+    const id = Number(p.id);
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    out.push(p);
+  };
+
+  const read = (p, d) => {
+    if (!p || d < 0) return;
+
+    let rec = p.recommended_product;
+
+    if (typeof rec === "string") rec = safeJsonParse(rec);
+    if (!Array.isArray(rec)) return;
+
+    for (const item of rec) {
+      const obj = typeof item === "string" ? safeJsonParse(item) : item;
+      if (!obj) continue;
+
+      pushUnique(obj);
+
+      // prevent infinite nesting
+      if (d > 0) read(obj, d - 1);
     }
-    
-    // CASE 2: Stringified JSON
-    else if (typeof recData === "string") {
-      const parsed = safeJsonParse(recData);
-      if (Array.isArray(parsed)) {
-        for (const item of parsed) {
-          if (item && item.id) {
-            const id = Number(item.id);
-            if (!seen.has(id)) {
-              seen.add(id);
-              result.push(item);
-            }
-          }
-        }
-      }
-    }
-    
-    // CASE 3: Single object
-    else if (recData && typeof recData === "object" && recData.id) {
-      const id = Number(recData.id);
-      if (!seen.has(id)) {
-        seen.add(id);
-        result.push(recData);
-      }
-    }
-    
-  } catch (e) {
-    console.error("Error extracting recommendations:", e);
-  }
-  
-  return result;
+  };
+
+  read(product, depth);
+  return out;
 }
 
 function formatPrice(n) {
@@ -90,7 +86,7 @@ function setCartToStorage(cart) {
 
 function upsertCartItem(cart, product, qtyToAdd = 1) {
   const id = Number(product?.id);
-  if (!id) return cart;
+  if (!id) return Array.isArray(cart) ? cart : [];
 
   const next = Array.isArray(cart) ? [...cart] : [];
   const idx = next.findIndex((x) => Number(x?.id) === id);
@@ -100,7 +96,13 @@ function upsertCartItem(cart, product, qtyToAdd = 1) {
     const prevQty = Number(next[idx]?.quantity || 1);
     next[idx] = { ...next[idx], quantity: prevQty + addQty };
   } else {
-    next.push({ ...product, quantity: addQty });
+    // recommended items might not have selectedSize/color; keep null
+    next.push({
+      ...product,
+      quantity: addQty,
+      selectedColor: null,
+      selectedSize: null,
+    });
   }
 
   return next;
@@ -108,10 +110,11 @@ function upsertCartItem(cart, product, qtyToAdd = 1) {
 
 function removeCartItem(cart, productId) {
   const id = Number(productId);
-  if (!id) return cart;
+  if (!id) return Array.isArray(cart) ? cart : [];
   return (cart || []).filter((x) => Number(x?.id) !== id);
 }
 
+/** ---------------- component ---------------- */
 export default function CheckoutPopup() {
   const { cart, setCart, setIsCheckoutPopup } = useContext(CartContext);
 
@@ -119,31 +122,67 @@ export default function CheckoutPopup() {
   const [getUser, setGetUser] = useState(null);
   const [orderData, setOrderData] = useState({});
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [isCartLoaded, setIsCartLoaded] = useState(false);
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
-  // ✅ CRITICAL FIX: Force cart to load from localStorage if context is empty
+  // ✅ stable snapshot when popup opens
+  const [baseCartSnapshot, setBaseCartSnapshot] = useState(null);
   useEffect(() => {
-    // If cart is empty but localStorage has items, restore them
-    if ((!cart || cart.length === 0) && localStorage.getItem("cart")) {
-      const storedCart = getCartFromStorage();
-      if (storedCart.length > 0) {
-        console.log("🔄 Restoring cart from localStorage:", storedCart);
-        setCart(storedCart);
-      }
+    if (baseCartSnapshot === null && Array.isArray(cart)) {
+      setBaseCartSnapshot(cart);
     }
-    setIsCartLoaded(true);
-  }, [cart, setCart]);
+  }, [cart, baseCartSnapshot]);
 
-  // ✅ Get current cart - either from context or localStorage
-  const currentCart = useMemo(() => {
-    if (cart && cart.length > 0) return cart;
-    return getCartFromStorage();
-  }, [cart]);
+  // ✅ fetch FULL products for each snapshot cart item
+  const [snapshotProducts, setSnapshotProducts] = useState([]);
+  const [recLoading, setRecLoading] = useState(false);
 
-  console.log("🛒 Current cart:", currentCart);
+  useEffect(() => {
+    const snapshot = Array.isArray(baseCartSnapshot) ? baseCartSnapshot : [];
+
+    if (!snapshot.length) {
+      setSnapshotProducts([]);
+      return;
+    }
+
+    let alive = true;
+
+    const load = async () => {
+      setRecLoading(true);
+
+      try {
+        const fullProducts = await Promise.all(
+          snapshot.map(async (item) => {
+            const pid = Number(item?.id);
+            if (!pid) return null;
+
+            try {
+              const res = await fetch(`${BASE_URL}/products/${pid}`);
+              const json = await res.json();
+
+              // Your Single page uses result[0]
+              const full = Array.isArray(json) ? json[0] : json;
+              return full || null;
+            } catch {
+              return null;
+            }
+          })
+        );
+
+        if (!alive) return;
+        setSnapshotProducts(fullProducts.filter(Boolean));
+      } finally {
+        if (alive) setRecLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      alive = false;
+    };
+  }, [BASE_URL, baseCartSnapshot]);
 
   // random order id
   const [randomId, setRandomId] = useState("");
@@ -163,7 +202,7 @@ export default function CheckoutPopup() {
     setIsCheckoutPopup(false);
   };
 
-  // close on ESC
+  // ✅ close on ESC
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === "Escape") closePopup();
@@ -174,11 +213,11 @@ export default function CheckoutPopup() {
 
   // Track analytics + random id
   useEffect(() => {
-    if (currentCart?.length > 0) {
+    if (cart?.length > 0) {
       window.dataLayer?.push({
         event: "begin_checkout",
         ecommerce: {
-          items: currentCart.map((item) => ({
+          items: cart.map((item) => ({
             item_id: item.id,
             item_name: item.product_name,
             price: item.selling_price,
@@ -190,10 +229,11 @@ export default function CheckoutPopup() {
       });
     }
     generateRandomText();
-  }, [currentCart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const user = JSON.parse(localStorage.getItem("user"));
     setGetUser(user?.user || null);
   }, []);
 
@@ -213,66 +253,52 @@ export default function CheckoutPopup() {
     date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   const currentDate = formatDate(new Date());
 
-  // Compute subtotal from CURRENT cart
+  // ✅ subtotal from CURRENT cart
   const subtotal = useMemo(() => {
-    return (currentCart || []).reduce((sum, item) => {
+    return (cart || []).reduce((sum, item) => {
       const price = Number(item?.selling_price || 0);
       const qty = Number(item?.quantity || 1);
       return sum + price * qty;
     }, 0);
-  }, [currentCart]);
+  }, [cart]);
 
   /**
-   * ✅ SIMPLIFIED RECOMMENDED PRODUCTS - GUARANTEED TO WORK
+   * ✅ Recommended list (WORKING):
+   * - from FULL products in snapshotProducts
+   * - de-dupe by id
+   * - exclude items already in base snapshot cart
    */
   const recommendedList = useMemo(() => {
-    // Wait for cart to load
-    if (!currentCart || currentCart.length === 0) {
-      console.log("⏳ Cart is empty, waiting for items...");
-      return [];
-    }
+    const snapshot = Array.isArray(baseCartSnapshot) ? baseCartSnapshot : [];
+    const baseIds = new Set(snapshot.map((c) => Number(c?.id)));
 
-    console.log("📦 Generating recommendations from cart:", currentCart);
-    
     const recMap = new Map();
-    const cartIds = new Set(currentCart.map((c) => Number(c?.id)));
 
-    // Loop through each cart item and get its recommendations
-    for (const cartItem of currentCart) {
-      const recommendations = extractRecommendedProducts(cartItem);
-      console.log(`🔍 Product ID ${cartItem.id} has ${recommendations.length} recommendations:`, recommendations);
-      
-      for (const rec of recommendations) {
-        const recId = Number(rec?.id);
-        if (!recId) continue;
-        
-        // Don't show items already in cart
-        if (cartIds.has(recId)) {
-          console.log(`⏭️ Skipping ID ${recId} - already in cart`);
-          continue;
-        }
-        
-        // Add to map (deduplicate)
-        if (!recMap.has(recId)) {
-          recMap.set(recId, rec);
-          console.log(`✅ Added recommendation: ${rec.product_name} (ID: ${recId})`);
-        }
+    for (const fullProduct of snapshotProducts) {
+      const recs = normalizeRecommendedProducts(fullProduct, { depth: 1 });
+
+      for (const r of recs) {
+        const rid = Number(r?.id);
+        if (!rid) continue;
+
+        if (baseIds.has(rid)) continue; // don't show items already in base cart
+
+        if (!recMap.has(rid)) recMap.set(rid, r);
       }
     }
 
-    const finalList = Array.from(recMap.values());
-    console.log("🎯 FINAL RECOMMENDED LIST:", finalList);
-    return finalList;
-  }, [currentCart]);
+    return Array.from(recMap.values());
+  }, [baseCartSnapshot, snapshotProducts]);
 
   const isInCart = (productId) => {
     const id = Number(productId);
-    return (currentCart || []).some((c) => Number(c?.id) === id);
+    return (cart || []).some((c) => Number(c?.id) === id);
   };
 
+  // ✅ toggle checkbox (setCart is single source of truth)
   const toggleRecommended = (product, checked) => {
     setCart((prev) => {
-      const current = Array.isArray(prev) && prev.length > 0 ? prev : getCartFromStorage();
+      const current = Array.isArray(prev) ? prev : getCartFromStorage();
 
       const next = checked
         ? upsertCartItem(current, product, 1)
@@ -287,7 +313,8 @@ export default function CheckoutPopup() {
   const checkOut = async (e) => {
     e.preventDefault();
 
-    const productDetails = currentCart;
+    // ✅ Use CURRENT cart (includes checked recommended)
+    const productDetails = Array.isArray(cart) ? cart : getCartFromStorage();
 
     if (!productDetails.length) {
       toast.error("আপনার কার্ট খালি। আগে প্রোডাক্ট যোগ করুন।");
@@ -368,7 +395,7 @@ export default function CheckoutPopup() {
 
         if (!getUser) {
           const guestOrderWithDate = { ...order, created_at: currentDate, order_id: randomId };
-          const guestOrders = JSON.parse(localStorage.getItem("guestOrders") || "[]");
+          const guestOrders = JSON.parse(localStorage.getItem("guestOrders")) || [];
           guestOrders.push(guestOrderWithDate);
           localStorage.setItem("guestOrders", JSON.stringify(guestOrders));
         }
@@ -381,24 +408,12 @@ export default function CheckoutPopup() {
         toast.error(errorData.message || "অর্ডার ব্যর্থ হয়েছে");
       }
     } catch (error) {
-      console.error("Order error:", error);
       toast.error("অর্ডার করা যায়নি, আবার চেষ্টা করুন।");
     }
   };
 
   const deliveryCharge = calculateDeliveryCharge(formData.deliveryArea);
   const grandTotal = Number(subtotal || 0) + deliveryCharge;
-
-  // Show loading state while cart is loading
-  if (!isCartLoaded) {
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-3">
-        <div className="w-full max-w-lg rounded-2xl bg-white p-8 text-center">
-          <p>Loading cart...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -464,8 +479,12 @@ export default function CheckoutPopup() {
                 </div>
               </div>
 
-              {/* ✅ RECOMMENDED PRODUCTS - NOW WORKING */}
-              {recommendedList.length > 0 ? (
+              {/* ✅ Recommended Products with CHECKBOX */}
+              {recLoading ? (
+                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-sm text-gray-600">
+                  Loading recommendations...
+                </div>
+              ) : recommendedList.length > 0 ? (
                 <div className="rounded-xl border border-gray-200 p-4 mb-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
@@ -477,6 +496,7 @@ export default function CheckoutPopup() {
                       const sell = formatPrice(p.selling_price);
                       const reg = formatPrice(p.regular_price);
                       const hasDiscount = reg > sell;
+
                       const checked = isInCart(p.id);
 
                       return (
@@ -533,11 +553,6 @@ export default function CheckoutPopup() {
                       );
                     })}
                   </div>
-                </div>
-              ) : currentCart.length > 0 ? (
-                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-center text-gray-500">
-                  <p>No recommended products found for items in your cart.</p>
-                  <p className="text-xs mt-1">Cart items: {currentCart.map(i => i.product_name).join(", ")}</p>
                 </div>
               ) : null}
 

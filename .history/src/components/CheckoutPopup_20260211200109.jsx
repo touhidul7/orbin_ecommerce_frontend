@@ -5,75 +5,54 @@ import { IoCloseOutline } from "react-icons/io5";
 import { CartContext } from "../context/CartContext";
 import OrderSuccessPopup from "./OrderSuccessPopup";
 
+/** ---------------- helpers ---------------- */
 function safeJsonParse(value) {
   if (typeof value !== "string") return null;
   try {
     return JSON.parse(value);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
 
-// ✅ ULTIMATE FIX - Handles ALL possible API formats
-function extractRecommendedProducts(product) {
-  if (!product) return [];
-  
-  const result = [];
+function normalizeRecommendedProducts(product, options = { depth: 1 }) {
+  const { depth } = options;
   const seen = new Set();
-  
-  try {
-    let recData = product.recommended_product;
-    if (!recData) return [];
-    
-    // CASE 1: Already an array
-    if (Array.isArray(recData)) {
-      for (const item of recData) {
-        if (item && item.id) {
-          const id = Number(item.id);
-          if (!seen.has(id)) {
-            seen.add(id);
-            result.push(item);
-          }
-        }
-      }
+  const out = [];
+
+  const pushUnique = (p) => {
+    if (!p || typeof p !== "object") return;
+    const id = Number(p.id);
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    out.push(p);
+  };
+
+  const read = (p, d) => {
+    if (!p || d < 0) return;
+
+    let rec = p.recommended_product;
+
+    // can be stringified JSON
+    if (typeof rec === "string") rec = safeJsonParse(rec);
+    if (!Array.isArray(rec)) return;
+
+    for (const item of rec) {
+      const obj = typeof item === "string" ? safeJsonParse(item) : item;
+      if (!obj) continue;
+
+      pushUnique(obj);
+      if (d > 0) read(obj, d - 1);
     }
-    
-    // CASE 2: Stringified JSON
-    else if (typeof recData === "string") {
-      const parsed = safeJsonParse(recData);
-      if (Array.isArray(parsed)) {
-        for (const item of parsed) {
-          if (item && item.id) {
-            const id = Number(item.id);
-            if (!seen.has(id)) {
-              seen.add(id);
-              result.push(item);
-            }
-          }
-        }
-      }
-    }
-    
-    // CASE 3: Single object
-    else if (recData && typeof recData === "object" && recData.id) {
-      const id = Number(recData.id);
-      if (!seen.has(id)) {
-        seen.add(id);
-        result.push(recData);
-      }
-    }
-    
-  } catch (e) {
-    console.error("Error extracting recommendations:", e);
-  }
-  
-  return result;
+  };
+
+  read(product, depth);
+  return out;
 }
 
 function formatPrice(n) {
   const num = Number(n);
-  if (Number.isNaN(num)) return 0;
-  return num;
+  return Number.isNaN(num) ? 0 : num;
 }
 
 function getCartFromStorage() {
@@ -90,9 +69,10 @@ function setCartToStorage(cart) {
 
 function upsertCartItem(cart, product, qtyToAdd = 1) {
   const id = Number(product?.id);
-  if (!id) return cart;
+  const safeCart = Array.isArray(cart) ? cart : [];
+  if (!id) return safeCart;
 
-  const next = Array.isArray(cart) ? [...cart] : [];
+  const next = [...safeCart];
   const idx = next.findIndex((x) => Number(x?.id) === id);
   const addQty = Number(qtyToAdd || 1);
 
@@ -100,18 +80,24 @@ function upsertCartItem(cart, product, qtyToAdd = 1) {
     const prevQty = Number(next[idx]?.quantity || 1);
     next[idx] = { ...next[idx], quantity: prevQty + addQty };
   } else {
-    next.push({ ...product, quantity: addQty });
+    next.push({
+      ...product,
+      quantity: addQty,
+      selectedColor: null,
+      selectedSize: null,
+    });
   }
-
   return next;
 }
 
 function removeCartItem(cart, productId) {
   const id = Number(productId);
-  if (!id) return cart;
-  return (cart || []).filter((x) => Number(x?.id) !== id);
+  const safeCart = Array.isArray(cart) ? cart : [];
+  if (!id) return safeCart;
+  return safeCart.filter((x) => Number(x?.id) !== id);
 }
 
+/** ---------------- component ---------------- */
 export default function CheckoutPopup() {
   const { cart, setCart, setIsCheckoutPopup } = useContext(CartContext);
 
@@ -119,33 +105,160 @@ export default function CheckoutPopup() {
   const [getUser, setGetUser] = useState(null);
   const [orderData, setOrderData] = useState({});
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const [isCartLoaded, setIsCartLoaded] = useState(false);
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
-  // ✅ CRITICAL FIX: Force cart to load from localStorage if context is empty
+  /**
+   * ✅ IMPORTANT FIX:
+   * - Snapshot should NOT depend on context cart (it can be [] briefly).
+   * - Take snapshot from localStorage immediately on mount.
+   */
+  const [baseCartSnapshot, setBaseCartSnapshot] = useState(() => getCartFromStorage());
+  const snapshotLockedRef = useRef(false);
+
+  // If later context loads a non-empty cart and snapshot was empty, update snapshot ONCE.
   useEffect(() => {
-    // If cart is empty but localStorage has items, restore them
-    if ((!cart || cart.length === 0) && localStorage.getItem("cart")) {
-      const storedCart = getCartFromStorage();
-      if (storedCart.length > 0) {
-        console.log("🔄 Restoring cart from localStorage:", storedCart);
-        setCart(storedCart);
+    if (snapshotLockedRef.current) return;
+
+    const storage = getCartFromStorage();
+    const ctx = Array.isArray(cart) ? cart : [];
+
+    // If snapshot empty but storage or ctx has items, refresh snapshot once.
+    if ((!baseCartSnapshot?.length && storage.length) || (!baseCartSnapshot?.length && ctx.length)) {
+      setBaseCartSnapshot(storage.length ? storage : ctx);
+      snapshotLockedRef.current = true;
+    }
+
+    // If snapshot already has items, lock it.
+    if (baseCartSnapshot?.length) {
+      snapshotLockedRef.current = true;
+    }
+  }, [cart, baseCartSnapshot]);
+
+  /**
+   * ✅ FULL PRODUCT FETCH:
+   * If cart items don't contain recommended_product, fetch /products/:id to get it.
+   */
+  const [snapshotProducts, setSnapshotProducts] = useState([]);
+  const [recLoading, setRecLoading] = useState(false);
+
+  useEffect(() => {
+    const snapshot = Array.isArray(baseCartSnapshot) ? baseCartSnapshot : [];
+    if (!snapshot.length) {
+      setSnapshotProducts([]);
+      return;
+    }
+
+    const uniqueIds = Array.from(new Set(snapshot.map((x) => Number(x?.id)).filter(Boolean)));
+
+    let cancelled = false;
+
+    const fetchOne = async (pid) => {
+      // Try multiple response shapes safely
+      const res = await fetch(`${BASE_URL}/products/${pid}`);
+      const json = await res.json();
+
+      // Your Single page uses json[0]
+      if (Array.isArray(json)) return json[0] || null;
+
+      // Sometimes API returns { data: [...] }
+      if (json?.data && Array.isArray(json.data)) return json.data[0] || null;
+
+      // Sometimes API returns { product: {...} }
+      if (json?.product) return json.product;
+
+      // Sometimes API returns direct object
+      if (json?.id) return json;
+
+      return null;
+    };
+
+    const load = async () => {
+      setRecLoading(true);
+      try {
+        const results = await Promise.all(
+          uniqueIds.map(async (pid) => {
+            try {
+              return await fetchOne(pid);
+            } catch {
+              return null;
+            }
+          })
+        );
+
+        if (cancelled) return;
+        setSnapshotProducts(results.filter(Boolean));
+      } finally {
+        if (!cancelled) setRecLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [BASE_URL, baseCartSnapshot]);
+
+  /**
+   * ✅ Recommended list:
+   * - build from full snapshotProducts
+   * - dedupe
+   * - exclude items already in snapshot cart
+   */
+  const recommendedList = useMemo(() => {
+    const snapshot = Array.isArray(baseCartSnapshot) ? baseCartSnapshot : [];
+    const baseIds = new Set(snapshot.map((c) => Number(c?.id)));
+
+    const recMap = new Map();
+
+    for (const fullProduct of snapshotProducts) {
+      const recs = normalizeRecommendedProducts(fullProduct, { depth: 1 });
+
+      for (const r of recs) {
+        const rid = Number(r?.id);
+        if (!rid) continue;
+        if (baseIds.has(rid)) continue;
+
+        if (!recMap.has(rid)) recMap.set(rid, r);
       }
     }
-    setIsCartLoaded(true);
-  }, [cart, setCart]);
 
-  // ✅ Get current cart - either from context or localStorage
-  const currentCart = useMemo(() => {
-    if (cart && cart.length > 0) return cart;
-    return getCartFromStorage();
-  }, [cart]);
+    return Array.from(recMap.values());
+  }, [baseCartSnapshot, snapshotProducts]);
 
-  console.log("🛒 Current cart:", currentCart);
+  // ✅ IMPORTANT: compute totals from CURRENT cart (context), fallback to storage
+  const currentCart = Array.isArray(cart) && cart.length ? cart : getCartFromStorage();
 
-  // random order id
+  const subtotal = useMemo(() => {
+    return (currentCart || []).reduce((sum, item) => {
+      const price = Number(item?.selling_price || 0);
+      const qty = Number(item?.quantity || 1);
+      return sum + price * qty;
+    }, 0);
+  }, [currentCart]);
+
+  const isInCart = (productId) => {
+    const id = Number(productId);
+    return (currentCart || []).some((c) => Number(c?.id) === id);
+  };
+
+  const toggleRecommended = (product, checked) => {
+    // ✅ Always use storage as source-of-truth for stability
+    const current = getCartFromStorage();
+
+    const next = checked
+      ? upsertCartItem(current, product, 1)
+      : removeCartItem(current, product?.id);
+
+    setCartToStorage(next);
+    setCart?.(next);
+
+    toast.success(checked ? "Recommended item added ✅" : "Recommended item removed ✅");
+  };
+
+  /** ------------ other logic (your original) ------------ */
   const [randomId, setRandomId] = useState("");
   const generateRandomText = () => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -159,11 +272,8 @@ export default function CheckoutPopup() {
     setIsCheckoutPopup(false);
   };
 
-  const closePopup = () => {
-    setIsCheckoutPopup(false);
-  };
+  const closePopup = () => setIsCheckoutPopup(false);
 
-  // close on ESC
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key === "Escape") closePopup();
@@ -172,7 +282,6 @@ export default function CheckoutPopup() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Track analytics + random id
   useEffect(() => {
     if (currentCart?.length > 0) {
       window.dataLayer?.push({
@@ -190,10 +299,11 @@ export default function CheckoutPopup() {
       });
     }
     generateRandomText();
-  }, [currentCart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const user = JSON.parse(localStorage.getItem("user"));
     setGetUser(user?.user || null);
   }, []);
 
@@ -213,82 +323,10 @@ export default function CheckoutPopup() {
     date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   const currentDate = formatDate(new Date());
 
-  // Compute subtotal from CURRENT cart
-  const subtotal = useMemo(() => {
-    return (currentCart || []).reduce((sum, item) => {
-      const price = Number(item?.selling_price || 0);
-      const qty = Number(item?.quantity || 1);
-      return sum + price * qty;
-    }, 0);
-  }, [currentCart]);
-
-  /**
-   * ✅ SIMPLIFIED RECOMMENDED PRODUCTS - GUARANTEED TO WORK
-   */
-  const recommendedList = useMemo(() => {
-    // Wait for cart to load
-    if (!currentCart || currentCart.length === 0) {
-      console.log("⏳ Cart is empty, waiting for items...");
-      return [];
-    }
-
-    console.log("📦 Generating recommendations from cart:", currentCart);
-    
-    const recMap = new Map();
-    const cartIds = new Set(currentCart.map((c) => Number(c?.id)));
-
-    // Loop through each cart item and get its recommendations
-    for (const cartItem of currentCart) {
-      const recommendations = extractRecommendedProducts(cartItem);
-      console.log(`🔍 Product ID ${cartItem.id} has ${recommendations.length} recommendations:`, recommendations);
-      
-      for (const rec of recommendations) {
-        const recId = Number(rec?.id);
-        if (!recId) continue;
-        
-        // Don't show items already in cart
-        if (cartIds.has(recId)) {
-          console.log(`⏭️ Skipping ID ${recId} - already in cart`);
-          continue;
-        }
-        
-        // Add to map (deduplicate)
-        if (!recMap.has(recId)) {
-          recMap.set(recId, rec);
-          console.log(`✅ Added recommendation: ${rec.product_name} (ID: ${recId})`);
-        }
-      }
-    }
-
-    const finalList = Array.from(recMap.values());
-    console.log("🎯 FINAL RECOMMENDED LIST:", finalList);
-    return finalList;
-  }, [currentCart]);
-
-  const isInCart = (productId) => {
-    const id = Number(productId);
-    return (currentCart || []).some((c) => Number(c?.id) === id);
-  };
-
-  const toggleRecommended = (product, checked) => {
-    setCart((prev) => {
-      const current = Array.isArray(prev) && prev.length > 0 ? prev : getCartFromStorage();
-
-      const next = checked
-        ? upsertCartItem(current, product, 1)
-        : removeCartItem(current, product?.id);
-
-      setCartToStorage(next);
-      toast.success(checked ? "Recommended item added ✅" : "Recommended item removed ✅");
-      return next;
-    });
-  };
-
   const checkOut = async (e) => {
     e.preventDefault();
 
-    const productDetails = currentCart;
-
+    const productDetails = getCartFromStorage(); // ✅ Always order what’s in storage (most reliable)
     if (!productDetails.length) {
       toast.error("আপনার কার্ট খালি। আগে প্রোডাক্ট যোগ করুন।");
       return;
@@ -352,9 +390,7 @@ export default function CheckoutPopup() {
         },
       });
 
-      if (!getUser) {
-        window.dataLayer?.push({ event: "sign_up", method: "guest_checkout" });
-      }
+      if (!getUser) window.dataLayer?.push({ event: "sign_up", method: "guest_checkout" });
 
       const response = await fetch(`${BASE_URL}/order/add`, {
         method: "POST",
@@ -368,7 +404,7 @@ export default function CheckoutPopup() {
 
         if (!getUser) {
           const guestOrderWithDate = { ...order, created_at: currentDate, order_id: randomId };
-          const guestOrders = JSON.parse(localStorage.getItem("guestOrders") || "[]");
+          const guestOrders = JSON.parse(localStorage.getItem("guestOrders")) || [];
           guestOrders.push(guestOrderWithDate);
           localStorage.setItem("guestOrders", JSON.stringify(guestOrders));
         }
@@ -377,28 +413,16 @@ export default function CheckoutPopup() {
         setCartToStorage([]);
         setOrderSuccess(true);
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         toast.error(errorData.message || "অর্ডার ব্যর্থ হয়েছে");
       }
     } catch (error) {
-      console.error("Order error:", error);
       toast.error("অর্ডার করা যায়নি, আবার চেষ্টা করুন।");
     }
   };
 
   const deliveryCharge = calculateDeliveryCharge(formData.deliveryArea);
   const grandTotal = Number(subtotal || 0) + deliveryCharge;
-
-  // Show loading state while cart is loading
-  if (!isCartLoaded) {
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 p-3">
-        <div className="w-full max-w-lg rounded-2xl bg-white p-8 text-center">
-          <p>Loading cart...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -464,8 +488,12 @@ export default function CheckoutPopup() {
                 </div>
               </div>
 
-              {/* ✅ RECOMMENDED PRODUCTS - NOW WORKING */}
-              {recommendedList.length > 0 ? (
+              {/* ✅ Recommended */}
+              {recLoading ? (
+                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-sm text-gray-600">
+                  Loading recommendations...
+                </div>
+              ) : recommendedList.length > 0 ? (
                 <div className="rounded-xl border border-gray-200 p-4 mb-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
@@ -477,6 +505,7 @@ export default function CheckoutPopup() {
                       const sell = formatPrice(p.selling_price);
                       const reg = formatPrice(p.regular_price);
                       const hasDiscount = reg > sell;
+
                       const checked = isInCart(p.id);
 
                       return (
@@ -533,11 +562,6 @@ export default function CheckoutPopup() {
                       );
                     })}
                   </div>
-                </div>
-              ) : currentCart.length > 0 ? (
-                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-center text-gray-500">
-                  <p>No recommended products found for items in your cart.</p>
-                  <p className="text-xs mt-1">Cart items: {currentCart.map(i => i.product_name).join(", ")}</p>
                 </div>
               ) : null}
 
