@@ -19,10 +19,10 @@ export default function MainFooter({
   description =
     "Step into style with RBIN BD. We offer a curated collection of the finest footwear, blending comfort, quality, and the latest trends for every stride.",
   quickLinks = [
-    { label: "About Us", href: "#" },
-    { label: "Contact Us", href: "#" },
-    { label: "FAQ", href: "#" },
-    { label: "Order Tracking", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Order Tracking", href: "/orders" },
   ],
   categories = [
     { label: "Sacchi", href: "#" },

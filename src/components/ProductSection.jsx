@@ -122,9 +122,9 @@ const ProductSection = ({ loading, data, className }) => {
                 <div className="relative bg-white">
                   {/* Brand logo top-left (replace with your logo img if you want) */}
                   <div className="absolute top-3 left-3 z-10">
-                    <div className="h-8 w-8 rounded-md bg-white/90 grid place-items-center shadow-sm">
+                   {/*  <div className="h-8 w-8 rounded-md bg-white/90 grid place-items-center shadow-sm">
                       <span className="text-yellow-500 font-bold">R</span>
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Discount badge top-right */}

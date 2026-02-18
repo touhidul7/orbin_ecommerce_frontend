@@ -73,7 +73,7 @@ const Account = () => {
   console.log(orderData);
 
   return (
-    <div>
+    <div className="pt-10 lg:pt-32">
       <section className="bg-white py-8 antialiased md:py-8">
         <div className="mx-auto max-w-screen-lg px-4 2xl:px-0">
           <h2 className="mb-4 text-xl font-semibold text-gray-900  sm:text-2xl md:mb-6">

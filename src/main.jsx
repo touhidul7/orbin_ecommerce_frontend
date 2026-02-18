@@ -20,6 +20,10 @@ import SubCategory from "./pages/SubCategory.jsx";
 import Shop from "./pages/Shop.jsx";
 import MyOrders from "./pages/MyOrders.jsx";
 import ReactPixel from "react-facebook-pixel";
+import Outlets from "./pages/Outlets.jsx";
+import AboutOrbinFashion from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
+import Faq from "./pages/Faq.jsx";
 
 // const PIXEL_ID = import.meta.env.VITE_API_PIXEL_ID;
 const GTM_ID = import.meta.env.VITE_API_GTM_ID;
@@ -56,6 +60,18 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/about",
+        element: <AboutOrbinFashion />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/faq",
+        element: <Faq />,
+      },
+      {
         path: "/product/:id/:name",
         element: <Single />,
       },
@@ -70,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: "/shop",
         element: <Shop />,
+      },
+      {
+        path: "/outlets",
+        element: <Outlets />,
       },
       {
         path: "/category/:id",

@@ -78,7 +78,7 @@ export default function ProductSearch() {
   };
 
   return (
-    <div className="relative hidden md:flex w-[320px] lg:w-[380px]">
+    <div className="relative hidden md:flex w-[320px] lg:w-[380px] border border-gray-100 rounded-full">
       {/* icon */}
       <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#053A47]/70">
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">

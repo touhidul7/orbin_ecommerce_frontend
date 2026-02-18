@@ -16,7 +16,7 @@ const MainLayout = () => {
     return (
         <div className='lg:pt-20 pt-16' onClick={() => menuopen? setMenuOpen(false): ""}>
             {/* <CartProvider> */}
-                <Header menuopen={menuopen} setMenuOpen={setMenuOpen}/>
+                <Header menuopen={menuopen} setIsCartOpen={setIsCartOpen} setMenuOpen={setMenuOpen}/>
                 
                 <ScrollToTop />
                 <Outlet context={{isCartOpen, setIsCartOpen}}/>

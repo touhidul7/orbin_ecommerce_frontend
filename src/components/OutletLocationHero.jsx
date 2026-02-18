@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 /**
  * OutletLocationHero
@@ -45,19 +46,20 @@ export default function OutletLocationHero({
                 OUTLET LOCATION
               </h1>
 
-              <button
+              <Link
+              to={"/outlets"}
                 type="button"
-                onClick={onView}
+                // onClick={}
                 className={
                   "mt-6 inline-flex items-center justify-center rounded-xl px-10 py-3 cursor-pointer" +
-                  "text-sm font-semibold text-white bg-red-600 " +
+                  "text-sm font-semibold text-white bg-[#DF263A] " +
                   "shadow-[0_12px_30px_rgba(220,38,38,0.35)] " +
                   "transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] " +
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40 cursor-pointer"
                 }
               >
                 OUTLET LOCATION
-              </button>
+              </Link>
             </div>
           </div>
         </div>

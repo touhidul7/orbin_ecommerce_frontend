@@ -464,82 +464,7 @@ export default function CheckoutPopup() {
                 </div>
               </div>
 
-              {/* ✅ RECOMMENDED PRODUCTS - NOW WORKING */}
-              {recommendedList.length > 0 ? (
-                <div className="rounded-xl border border-gray-200 p-4 mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
-                    <span className="text-xs text-gray-500">Tick to include</span>
-                  </div>
-
-                  <div className="space-y-3">
-                    {recommendedList.map((p) => {
-                      const sell = formatPrice(p.selling_price);
-                      const reg = formatPrice(p.regular_price);
-                      const hasDiscount = reg > sell;
-                      const checked = isInCart(p.id);
-
-                      return (
-                        <label
-                          key={p.id}
-                          className="flex items-start gap-3 rounded-xl border border-gray-100 p-3 hover:bg-gray-50 transition cursor-pointer"
-                        >
-                          <div className="pt-1">
-                            <input
-                              type="checkbox"
-                              checked={checked}
-                              onChange={(e) => toggleRecommended(p, e.target.checked)}
-                              className="h-4 w-4 accent-black cursor-pointer"
-                            />
-                          </div>
-
-                          <div className="h-14 w-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
-                            {p.product_image ? (
-                              <img
-                                src={`${IMAGE_URL}/admin/product/${p.product_image}`}
-                                alt={p.product_name}
-                                className="h-full w-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            ) : null}
-                          </div>
-
-                          <div className="flex-1">
-                            <p className="text-sm font-semibold text-gray-900 leading-snug">
-                              {p.product_name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {p.select_category}
-                              {p.select_sub_category ? ` • ${p.select_sub_category}` : ""}
-                            </p>
-
-                            <div className="mt-1 flex items-center gap-2">
-                              <span className="text-sm font-bold">৳ {sell}</span>
-                              {hasDiscount && (
-                                <span className="text-xs text-gray-500 line-through">৳ {reg}</span>
-                              )}
-                              <span className="text-xs text-gray-500">
-                                {p.availability || "In Stock"}
-                              </span>
-                            </div>
-
-                            <div className="mt-2 text-xs text-gray-500">
-                              {checked ? "Included ✅" : "Not included"}
-                            </div>
-                          </div>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : currentCart.length > 0 ? (
-                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-center text-gray-500">
-                  <p>No recommended products found for items in your cart.</p>
-                  <p className="text-xs mt-1">Cart items: {currentCart.map(i => i.product_name).join(", ")}</p>
-                </div>
-              ) : null}
+              
 
               {/* Form */}
               <form onSubmit={checkOut} className="space-y-4">
@@ -636,24 +561,101 @@ export default function CheckoutPopup() {
                     <span className="text-sm">ঢাকার বাইরে (ডেলিভারি চার্জ: ৳১২০)</span>
                   </label>
                 </div>
+                      {/* ✅ RECOMMENDED PRODUCTS - NOW WORKING */}
+              {recommendedList.length > 0 ? (
+                <div className="rounded-xl border border-gray-200 p-4 mb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
+                    <span className="text-xs text-gray-500">Tick to include</span>
+                  </div>
 
+                  <div className="space-y-3">
+                    {recommendedList.map((p) => {
+                      const sell = formatPrice(p.selling_price);
+                      const reg = formatPrice(p.regular_price);
+                      const hasDiscount = reg > sell;
+                      const checked = isInCart(p.id);
+
+                      return (
+                        <label
+                          key={p.id}
+                          className="flex items-start gap-3 rounded-xl border border-gray-100 p-3 hover:bg-gray-50 transition cursor-pointer"
+                        >
+                          <div className="pt-1">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={(e) => toggleRecommended(p, e.target.checked)}
+                              className="h-4 w-4 accent-black cursor-pointer"
+                            />
+                          </div>
+
+                          <div className="h-14 w-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                            {p.product_image ? (
+                              <img
+                                src={`${IMAGE_URL}/admin/product/${p.product_image}`}
+                                alt={p.product_name}
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            ) : null}
+                          </div>
+
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-gray-900 leading-snug">
+                              {p.product_name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {p.select_category}
+                              {p.select_sub_category ? ` • ${p.select_sub_category}` : ""}
+                            </p>
+
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-sm font-bold">৳ {sell}</span>
+                              {hasDiscount && (
+                                <span className="text-xs text-gray-500 line-through">৳ {reg}</span>
+                              )}
+                              <span className="text-xs text-gray-500">
+                                {p.availability || "In Stock"}
+                              </span>
+                            </div>
+
+                            <div className="mt-2 text-xs text-gray-500">
+                              {checked ? "Included ✅" : "Not included"}
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : currentCart.length > 0 ? (
+                <div className="rounded-xl border border-gray-200 p-4 mb-4 text-center text-gray-500">
+                  <p>No recommended products found for items in your cart.</p>
+                  <p className="text-xs mt-1">Cart items: {currentCart.map(i => i.product_name).join(", ")}</p>
+                </div>
+              ) : null}
                 {/* Buttons */}
                 <div className="flex items-center gap-3 pt-2">
-                  <button
+                 {/*  <button
                     type="button"
                     onClick={closePopup}
                     className="cursor-pointer w-1/2 rounded-xl border border-gray-200 py-3 font-semibold text-gray-800 hover:bg-gray-50 transition"
                   >
                     Cancel
-                  </button>
+                  </button> */}
+                  
                   <button
                     type="submit"
-                    className="cursor-pointer w-1/2 rounded-xl bg-black py-3 font-semibold text-white hover:bg-[#222] transition"
+                    className="cursor-pointer w-full rounded-xl bg-black py-3 font-semibold text-white hover:bg-[#222] transition"
                   >
                     অর্ডার করুন
                   </button>
                 </div>
               </form>
+              
             </>
           )}
         </div>

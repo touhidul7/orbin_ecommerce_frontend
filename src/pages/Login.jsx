@@ -237,7 +237,7 @@ const Login = () => {
                                             <button
                                                 type="submit"
                                                 disabled={isSigningIn}
-                                                className={`inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${isSigningIn ? 'opacity-70 cursor-not-allowed' : 'bg-[#AD0101] hover:bg-[#8f0000]'
+                                                className={`inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#DF263A] ${isSigningIn ? 'opacity-70 cursor-not-allowed' : 'bg-[#DF263A] hover:bg-[#8f0000]'
                                                     }`}
                                             >
                                                 {isSigningIn ? 'Logging in...' : 'Log in'}

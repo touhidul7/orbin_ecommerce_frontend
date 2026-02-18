@@ -9,7 +9,7 @@ const MyOrders = () => {
   }, []);
 
   return (
-    <div>
+    <div className="pt-10 lg:pt-32">
       <h2>My Orders</h2>
       {orders.length > 0 ? (
         <div>

@@ -209,7 +209,7 @@ const Cart = () => {
                 </div>
                 <Link
                   to="/checkout"
-                  className="flex w-full items-center justify-center rounded-lg bg-[#BA0001] px-5 py-3.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 text-xl"
+                  className="flex w-full items-center justify-center rounded-lg bg-[#DF263A] px-5 py-3.5 text-sm font-medium text-white hover:bg-[#c51b2c] focus:outline-none focus:ring-4 focus:ring-blue-300 text-xl"
                 > 
                   ক্যাশ অন ডেলিভারিতে অর্ডার করুন
                 </Link>
