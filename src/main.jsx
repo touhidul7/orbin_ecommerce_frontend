@@ -24,6 +24,7 @@ import Outlets from "./pages/Outlets.jsx";
 import AboutOrbinFashion from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Faq from "./pages/Faq.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 // const PIXEL_ID = import.meta.env.VITE_API_PIXEL_ID;
 const GTM_ID = import.meta.env.VITE_API_GTM_ID;
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: "/faq",
         element: <Faq />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "/product/:id/:name",

@@ -125,6 +125,7 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
                     spaceBetween={18}
                     slidesPerView={1}
                     breakpoints={{
+                        0: {slidesPerView: 2},
                         600: { slidesPerView: 2 },
                         768: { slidesPerView: 3 },
                         1024: { slidesPerView: 4 },
@@ -171,7 +172,7 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
                                     </div>
 
                                     {/* CONTENT */}
-                                    <div className="px-5 pt-3 pb-5 text-center">
+                                    <div className="lg:px-5 px-2 pt-3 pb-5 text-center">
                                         {/* sizes like screenshot */}
                                         {item?.size && (
                                             <div className="custom-color flex justify-center gap-2 flex-wrap mb-2">
@@ -222,18 +223,18 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
 
                                         {/* title */}
                                         <Link to={`/product/${item.id}/${formatUrl(item.product_name)}`}>
-                                            <h3 className="text-[20px] leading-tight font-medium text-gray-900 mt-1 line-clamp-2">
+                                            <h3 className="text-[14px] lg:text-[20px] leading-tight font-medium text-gray-900 mt-1 line-clamp-2">
                                                 {item.product_name || "No Name Available"}
                                             </h3>
                                         </Link>
 
                                         {/* price */}
-                                        <div className="mt-3 flex items-center justify-center gap-3">
-                                            <span className="text-[22px] font-semibold text-gray-900">
+                                        <div className="mt-3  lg:flex-row flex-col flex items-center justify-center gap-2 lg:gap-3">
+                                            <span className="text-16px lg:text-[22px] font-semibold text-gray-900">
                                                 Tk {item.selling_price}
                                             </span>
                                             {Number(item.regular_price) > 0 && (
-                                                <span className="text-lg text-gray-400 line-through">
+                                                <span className="text-sm lg:text-lg text-gray-400 line-through">
                                                     Tk {item.regular_price}
                                                 </span>
                                             )}

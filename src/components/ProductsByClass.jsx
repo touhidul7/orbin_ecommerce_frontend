@@ -35,14 +35,14 @@ const ProductsByClass = () => {
       <div className="fc-wrap">
         <div className="mb-4 flex items-center justify-between gap-4 md:mb-8">
           <header className="fc-header mt-18">
-            <h2 className="fc-title ">POPULAR CATEGORIES</h2>
+            <h2 className="fc-title ">POPULAR PRODUCTS</h2>
             <div className="fc-underline" />
           </header>
           <Link
             to={"/shop"}
             className="flex items-center mt-15 text-base font-medium text-gray-900 hover:underline"
           >
-            See more products
+            See more
             <svg
               className="ms-1 h-5 w-5"
               aria-hidden="true"
@@ -76,7 +76,7 @@ const ProductsByClass = () => {
             to={"/shop"}
             className="flex items-center text-base font-medium text-gray-900 hover:underline"
           >
-            See more products
+            See more
             <svg
               className="ms-1 h-5 w-5"
               aria-hidden="true"
@@ -110,7 +110,7 @@ const ProductsByClass = () => {
             to={"/shop"}
             className="flex items-center text-base font-medium text-gray-900 hover:underline"
           >
-            See more products
+            See more
             <svg
               className="ms-1 h-5 w-5"
               aria-hidden="true"

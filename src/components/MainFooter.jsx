@@ -15,28 +15,50 @@ import {
  * - Slightly improved: better spacing, responsive grid, accessible links, hover states
  */
 export default function MainFooter({
-  brandName = "RBIN",
-  description =
-    "Step into style with RBIN BD. We offer a curated collection of the finest footwear, blending comfort, quality, and the latest trends for every stride.",
+  description = "With your trust and confidence, Orbin Fashion delivers premium quality shoes, offering the perfect blend of comfort, style, and durability. We proudly deliver quality products and trusted service across every corner of Bangladesh.",
   quickLinks = [
     { label: "About Us", href: "/about" },
     { label: "Contact Us", href: "/contact" },
     { label: "FAQ", href: "/faq" },
     { label: "Order Tracking", href: "/orders" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Cookie Policy", href: "/cookie-policy" },
   ],
   categories = [
-    { label: "Sacchi", href: "#" },
-    { label: "Loafer", href: "#" },
-    { label: "Formal Shoes", href: "#" },
-    { label: "Casual Shoes", href: "#" },
-    { label: "Cycle Shoes", href: "#" },
-    { label: "Half Loafer", href: "#" },
+    { label: "Sacchi", href: "/category/Sacchi" },
+    { label: "Loafer", href: "/category/Loafer" },
+    { label: "Formal Shoes", href: "/category/Formal%20Shoes" },
+    { label: "Casual Shoes", href: "/category/Casual%20Shoes" },
+    { label: "Cycle Shoes", href: "/category/Cycle%20Shoes" },
+    { label: "Half Loafer", href: "/category/Half%20Loafer" },
   ],
-  address = "আগারগাঁও ৩০ ফিট রোড, লাইফ বিল্ডিং ভবন",
-  phone = "+8809647149449",
-  email = "RBIN@gmail.com",
+  showrooms = [
+    {
+      name: "Bogura",
+      address: "Shop #28, Runner Plaza, 4th lift, Bogura Sadar.",
+      phone: "(+880) 1336640100",
+    },
+    {
+      name: "Pabna",
+      address: "Aurangazeb Road, Khalifa Patti Mosque, Pabna Sadar.",
+      phone: "(+880) 1336640101",
+    },
+    {
+      name: "Rajshahi",
+      address:
+        "Beside of Chilish Restaurant, Shaheb Bazar Zero Point, Rajshahi Sadar",
+      phone: "(+880) 1607975724",
+    },
+    {
+      name: "Head Office",
+      address: "At the end of Lane 2, Purbo Rasulpur, Kamrangirchar",
+      phone: "(+880) 1607975724",
+      email: "hello@orbin.com.bd",
+    },
+  ],
   year = 2026,
-  devName = "Sadhin Hossain",
+  devName = "Spariqo (Internet Marketing Company)",
 }) {
   return (
     <footer className="bg-gradient-to-b from-[#FCCCD8] to-[#FFFFFF] text-[black]">
@@ -47,19 +69,14 @@ export default function MainFooter({
           <div>
             <div className="flex items-center gap-3">
               {/* Simple brand mark */}
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#0a4a58]">
-                <span className="text-xl font-extrabold text-[#f7c948]">R</span>
-              </div>
-              <div className="text-2xl font-extrabold text-[black]">
-                {brandName}
-              </div>
+              <img src="/public/logo.png" className="w-40" alt="" />
             </div>
 
             <p className="mt-5 max-w-sm text-lg leading-6 text-black">
               {description}
             </p>
 
-            <div className="mt-7 flex items-center gap-4 text-black">
+            {/* <div className="mt-7 flex items-center gap-4 text-black">
               <SocialIcon href="#" label="Facebook">
                 <Facebook className="h-10 w-10 bg-black text-white p-2 rounded" />
               </SocialIcon>
@@ -69,23 +86,35 @@ export default function MainFooter({
               <SocialIcon href="#" label="YouTube">
                 <Youtube className="h-10 w-10 bg-black text-white p-2 rounded" />
               </SocialIcon>
-            </div>
+            </div> */}
           </div>
 
-          {/* Quick links */}
-          <FooterColumn title="Quick Links">
-            <ul className="mt-6 space-y-3">
-              {quickLinks.map((l) => (
-                <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-lg text-black transition-colors hover:text-black"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Get in touch */}
+          <FooterColumn title="Nearest Showroom">
+            {showrooms.map((s) => (
+              <div key={s.name} className="mb-2">
+                <div className="text-lg font-semibold text-black">{s.name}</div>{" "}
+                <div className="text-sm text-black">{s.address}</div>{" "}
+                <div className="text-sm text-black">{s.phone}</div>
+                {s.email && <div className="text-sm text-black">{s.email}</div>}
+              </div>
+            ))}
+            {/* <div className="mt-6 space-y-4">
+              <InfoRow
+                icon={<MapPin className="h-5 w-5 text-black" />}
+                text={address}
+              />
+              <InfoRow
+                icon={<Phone className="h-5 w-5 text-black" />}
+                text={phone}
+                href={`tel:${phone.replace(/\s+/g, "")}`}
+              />
+              <InfoRow
+                icon={<Mail className="h-5 w-5 text-black" />}
+                text={email}
+                href={`mailto:${email}`}
+              />
+            </div> */}
           </FooterColumn>
 
           {/* Categories */}
@@ -104,24 +133,20 @@ export default function MainFooter({
             </ul>
           </FooterColumn>
 
-          {/* Get in touch */}
-          <FooterColumn title="Get In Touch">
-            <div className="mt-6 space-y-4">
-              <InfoRow 
-                icon={<MapPin className="h-5 w-5 text-black" />}
-                text={address}
-              />
-              <InfoRow
-                icon={<Phone className="h-5 w-5 text-black" />}
-                text={phone}
-                href={`tel:${phone.replace(/\s+/g, "")}`}
-              />
-              <InfoRow
-                icon={<Mail className="h-5 w-5 text-black" />}
-                text={email}
-                href={`mailto:${email}`}
-              />
-            </div>
+          {/* Quick links */}
+          <FooterColumn title="Quick Links">
+            <ul className="mt-6 space-y-3">
+              {quickLinks.map((l) => (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    className="text-lg text-black transition-colors hover:text-black"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </FooterColumn>
         </div>
       </div>
@@ -131,13 +156,45 @@ export default function MainFooter({
 
       {/* Bottom */}
       <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-6  lg:items-center lg:justify-between">
+          {/* Policy + copyright */}
+          <div className="flex flex-col gap-4 text-lg text-black">
+            {/*  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <a href="#" className="hover:text-black">
+                Privacy Policy
+              </a>
+              <span className="text-black">|</span>
+              <a href="#" className="hover:text-black">
+                Terms of Service
+              </a>
+              <span className="text-black">|</span>
+              <a href="#" className="hover:text-black">
+                Cookie Policy
+              </a>
+            </div> */}
+
+            <div className="text-xs text-center">
+              © {year} <span className="font-semibold text-black">RBIN</span>.
+              <span className="ml-1">
+                ©2026 Orbin Fashion All rights reserved.
+              </span>
+              <span className="mx-2 text-black">|</span>
+              <span>
+                Designed and Develop by{" "}
+                <span className="font-semibold text-black">{devName}</span>
+              </span>
+            </div>
+            <span className="text-center text-xs">
+              <a href="https://www.spariqo.com/">https://www.spariqo.com/</a>
+            </span>
+          </div>
+
           {/* Payments */}
           <div>
-            <div className="text-lg font-semibold tracking-wide text-[black]">
+            {/* <div className="text-lg font-semibold tracking-wide text-[black]">
               SECURE PAYMENTS
-            </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
+            </div> */}
+            {/* <div className="mt-3 flex flex-wrap items-center gap-2">
               {[
                 "bKash",
                 "Nagad",
@@ -156,34 +213,8 @@ export default function MainFooter({
                   {p}
                 </span>
               ))}
-            </div>
-          </div>
-
-          {/* Policy + copyright */}
-          <div className="flex flex-col gap-4 text-lg text-black lg:items-end">
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              <a href="#" className="hover:text-black">
-                Privacy Policy
-              </a>
-              <span className="text-black">|</span>
-              <a href="#" className="hover:text-black">
-                Terms of Service
-              </a>
-              <span className="text-black">|</span>
-              <a href="#" className="hover:text-black">
-                Cookie Policy
-              </a>
-            </div>
-
-            <div className="text-xs">
-              © {year} <span className="font-semibold text-black">RBIN</span>.
-              <span className="ml-1">All rights reserved.</span>
-              <span className="mx-2 text-black">|</span>
-              <span>
-                Designed and Develop by{" "}
-                <span className="font-semibold text-black">{devName}</span>
-              </span>
-            </div>
+            </div> */}
+            <img src="/public/payment-methods.png" alt="" />
           </div>
         </div>
       </div>

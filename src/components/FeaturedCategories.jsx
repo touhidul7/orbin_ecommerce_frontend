@@ -19,8 +19,30 @@ export default function FeaturedCategories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  function useResponsiveLimit() {
+    const getLimit = () => {
+      if (typeof window === "undefined") return 5;
+
+      // Tailwind lg breakpoint = 1024px
+      return window.innerWidth >= 1024 ? 5 : 4;
+    };
+
+    const [limit, setLimit] = useState(getLimit);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setLimit(getLimit());
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return limit;
+  }
+
   // ✅ Show more state
-  const DEFAULT_LIMIT = 5;
+  const DEFAULT_LIMIT = useResponsiveLimit();
   const [showAll, setShowAll] = useState(false);
 
   const loadCategories = async () => {
@@ -61,10 +83,19 @@ export default function FeaturedCategories() {
       ) : (
         <div className="fc-grid">
           {visibleCategories.map((c) => (
-            <Link to={`/category/${c.name}`} key={c.id || c.name} className="fc-card" type="button">
+            <Link
+              to={`/category/${c.name}`}
+              key={c.id || c.name}
+              className="fc-card"
+              type="button"
+            >
               <div className="fc-inner">
                 <div className="fc-logo">
-                  {c.logoText ? <BrandMark variant={c.logoText} /> : <BrandMark />}
+                  {c.logoText ? (
+                    <BrandMark variant={c.logoText} />
+                  ) : (
+                    <BrandMark />
+                  )}
                 </div>
 
                 <div className="fc-imgFrame">

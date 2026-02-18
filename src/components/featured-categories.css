@@ -46,6 +46,15 @@
   gap: 18px;
   margin-top: 10px;
 }
+@media(max-width:767px){
+  .fc-title{
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .fc-underline {
+  height: 1.5px;
+  }
+}
 
 /* responsive like ecommerce category grids */
 @media (max-width: 1100px) {
