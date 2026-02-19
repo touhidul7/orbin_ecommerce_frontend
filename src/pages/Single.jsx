@@ -185,14 +185,24 @@ const Single = () => {
 
   const [selectedColor, setSelectedColor] = useState(null);
 
-  useEffect(() => {
-    if (data?.color) {
-      const firstColor = data.color.split(",")[0].trim();
-      setSelectedColor({ name: firstColor, code: getColorCode(firstColor) });
-    } else {
-      setSelectedColor(null);
-    }
-  }, [data]);
+useEffect(() => {
+  // default color
+  if (data?.color) {
+    const firstColor = data.color.split(",")[0].trim();
+    setSelectedColor({ name: firstColor, code: getColorCode(firstColor) });
+  } else {
+    setSelectedColor(null);
+  }
+
+  // default size
+  if (data?.size) {
+    const firstSize = data.size.split(",")[0].trim();
+    setSelectedSize(firstSize);
+  } else {
+    setSelectedSize(null);
+  }
+}, [data]);
+
 
   /* Data loading functions */
   const loadData = async () => {

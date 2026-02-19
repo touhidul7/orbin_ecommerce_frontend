@@ -69,7 +69,7 @@ export default function MainFooter({
           <div>
             <div className="flex items-center gap-3">
               {/* Simple brand mark */}
-              <img src="/public/logo.png" className="w-40" alt="" />
+              <img src="/logo.png" className="w-40" alt="" />
             </div>
 
             <p className="mt-5 max-w-sm text-lg leading-6 text-black">
@@ -173,10 +173,10 @@ export default function MainFooter({
               </a>
             </div> */}
 
-            <div className="text-xs text-center">
+            <div className="text-[16px] text-center">
               © {year} <span className="font-semibold text-black">RBIN</span>.
               <span className="ml-1">
-                ©2026 Orbin Fashion All rights reserved.
+                Orbin Fashion All rights reserved.
               </span>
               <span className="mx-2 text-black">|</span>
               <span>
@@ -184,7 +184,7 @@ export default function MainFooter({
                 <span className="font-semibold text-black">{devName}</span>
               </span>
             </div>
-            <span className="text-center text-xs">
+            <span className="text-center text-[16px]">
               <a href="https://www.spariqo.com/">https://www.spariqo.com/</a>
             </span>
           </div>
