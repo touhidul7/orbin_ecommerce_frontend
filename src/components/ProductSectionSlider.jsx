@@ -83,20 +83,38 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
 
     /* ---------- init selected colors + qty ---------- */
     useEffect(() => {
-        if (!data?.length) return;
+    if (!data?.length) return;
 
-        const initialColors = {};
-        const initialQuantities = {};
+    const initialColors = {};
+    const initialSizes = {};
+    const initialQuantities = {};
 
-        data.forEach((item) => {
-            const colors = processProductColors(item);
-            if (colors.length > 0) initialColors[item.id] = colors[0].code;
-            initialQuantities[item.id] = 1;
-        });
+    data.forEach((item) => {
+        const colors = processProductColors(item);
+        if (colors.length > 0) {
+            initialColors[item.id] = colors[0].code;
+        }
 
-        setSelectedColors(initialColors);
-        setQuantities(initialQuantities);
-    }, [data]);
+        // ✅ Select first size automatically
+        if (item?.size) {
+            const sizes = item.size
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+
+            if (sizes.length > 0) {
+                initialSizes[item.id] = sizes[0];
+            }
+        }
+
+        initialQuantities[item.id] = 1;
+    });
+
+    setSelectedColors(initialColors);
+    setSelectedSizes(initialSizes); // ✅ ADD THIS
+    setQuantities(initialQuantities);
+}, [data]);
+
 
     /* ---------- sync cart ---------- */
     useEffect(() => {
@@ -211,7 +229,7 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
                                                         type="button"
                                                         onClick={() => handleColorSelect(item.id, color.code)}
                                                         className={`h-5 w-5 rounded-full border-2 transition cursor-pointer ${selectedColors[item.id] === color.code
-                                                                ? "border-gray-900"
+                                                                ? "border-[#e09304]"
                                                                 : "border-gray-200"
                                                             }`}
                                                         style={{ backgroundColor: color.code }}

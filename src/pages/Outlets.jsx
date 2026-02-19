@@ -16,13 +16,13 @@ import { MapPin, ChevronLeft, ChevronRight, Store } from "lucide-react";
 const sampleOutlets = [
   {
     id: 1,
-    name: "Jessore",
+    name: "Bogura",
     addressLabel: "ঠিকানা",
-    address: "RN Road, Jashore",
-    city: "Jashore",
-    district: "Khulna",
-    phone: "",
-    mapUrl: "https://maps.google.com/?q=RN+Road+Jessore",
+    address: "Shop #28, Runner Plaza, 4th lift, Bogura Sadar.",
+    city: "Bogura",
+    district: "Bogura",
+    phone: "(+880) 1336640100",
+    mapUrl: "https://maps.app.goo.gl/J1ax8pQ4kFkyTLeeA",
     images: [
       "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1200&q=70",
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=70",
@@ -31,13 +31,13 @@ const sampleOutlets = [
   },
   {
     id: 2,
-    name: "CTG-1",
+    name: "Pabna",
     addressLabel: "ঠিকানা",
-    address: "Equity ZF Fortune Mall, Shop 401",
-    city: "Chittagong",
-    district: "Chittagong",
-    phone: "",
-    mapUrl: "https://maps.google.com/?q=ZF+Fortune+Mall+Shop+401",
+    address: "Aurangazeb Road, Khalifa Patti Mosque, Pabna Sadar.",
+    city: "Pabna",
+    district: "Pabna",
+    phone: "(+880) 1336640101",
+    mapUrl: "https://maps.app.goo.gl/EcouEsv5aGzPBF1N9",
     images: [
       "https://images.unsplash.com/photo-1555529669-2269763671c0?auto=format&fit=crop&w=1200&q=70",
       "https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=1200&q=70",
@@ -45,13 +45,13 @@ const sampleOutlets = [
   },
   {
     id: 3,
-    name: "Feni",
+    name: "Rajshahi",
     addressLabel: "ঠিকানা",
-    address: "Feni Garden City, Shop D-95",
-    city: "Feni",
-    district: "Chittagong",
-    phone: "01814127606",
-    mapUrl: "https://maps.google.com/?q=Feni+Garden+City+Shop+D-95",
+    address: "Beside of Chilish Restaurant, Shaheb Bazar Zero Point, Rajshahi Sadar",
+    city: "Rajshahi",
+    district: "Rajshahi",
+    phone: "(+880) 1607975724",
+    mapUrl: "https://maps.app.goo.gl/SFi9SyQrizvHd7eE6",
     images: [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=70",
       "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=70",
@@ -62,11 +62,12 @@ const sampleOutlets = [
     id: 4,
     name: "Head Office",
     addressLabel: "ঠিকানা",
-    address: "Lion Builders, 60 feet, Agargaon",
-    city: "Dhaka",
+    address: "At the end of Lane 2, Purbo Rasulpur, Kamrangirchar",
+    city: "Dha  ka",
     district: "Dhaka",
-    phone: "",
-    mapUrl: "https://maps.google.com/?q=Agargaon+60+feet+Lion+Builders",
+    phone: "(+880) 1607975724",
+    email: "hello@orbin.com.bd",
+    mapUrl: "https://maps.app.goo.gl/M9db34fNcF84J3qD6",
     images: [
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=70",
       "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=1200&q=70",
@@ -159,6 +160,12 @@ function OutletCard({ outlet }) {
               <p>
                 <span className="font-semibold text-slate-900">যোগাযোগ:</span>{" "}
                 {outlet.phone}
+              </p>
+            ) : null}
+            {outlet.email ? (
+              <p>
+                <span className="font-semibold text-slate-900">ইমেইল:</span>{" "}
+                {outlet.email}
               </p>
             ) : null}
           </div>

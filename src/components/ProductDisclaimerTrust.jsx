@@ -15,9 +15,9 @@ export default function ProductDisclaimerTrust({
 //   viewingCount = 47,
 }) {
   return (
-    <div className="w-full mt-8">
+    <div className="w-full">
       {/* Disclaimer card */}
-      <div className="rounded border border-slate-200 bg-white p-4 sm:p-5 shadow">
+      {/* <div className="rounded border border-slate-200 bg-white p-4 sm:p-5 shadow">
         <div className="flex items-start gap-3">
           <div className="mt-0.5 grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white">
             <Info className="h-5 w-5 text-slate-700" />
@@ -41,7 +41,7 @@ export default function ProductDisclaimerTrust({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Viewing count */}
       {/* <div className="py-4 text-center text-sm text-slate-600">
@@ -50,7 +50,7 @@ export default function ProductDisclaimerTrust({
       </div> */}
 
       {/* Trust row */}
-      <div className="grid grid-cols-3 gap-6 sm:gap-10">
+      <div className="grid grid-cols-3 gap-5 sm:gap-5">
         <TrustItem icon={<Truck className="h-6 w-6" />} title="Fast Shipping" />
         <TrustItem
           icon={<ShieldCheck className="h-6 w-6" />}

@@ -203,7 +203,8 @@ const Header = ({ menuopen, setMenuOpen, setIsCartOpen }) => {
                       Customer Care
                     </div>
                     <div className="font-semibold text-[18px]">
-                      +88 01709306560
+                     
+                      +88 01607975724
                     </div>
                   </div>
                 </div>

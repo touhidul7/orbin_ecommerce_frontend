@@ -122,6 +122,7 @@ const Single = () => {
 
   const [selectedImg, setSelectedImg] = useState(null);
 
+
   // ✅ also pull setCart so we can update UI totals everywhere instantly
   const { cart, addToCart, orderNow, setCart } = useContext(CartContext);
 
@@ -308,13 +309,13 @@ const Single = () => {
         </div>
       ) : (
         <div>
-          <div className="bg-white-100 py-8 mt-10 pt-25">
+          <div className="bg-white-100 py-8 mt-10 lg:pt-25">
             <div className=" mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col md:flex-row -mx-4 align-center">
                 <div className="md:flex-1 px-4">
-                  <div className="lg:h-[460px] rounded-lg bg-white mb-4 border border-gray-100 p-2">
+                  <div className="lg:h-[460px] text-center flex justify-center rounded-lg bg-white mb-4 border border-gray-100 p-2">
                     <img
-                      className="w-full lg:h-full h-auto object-cover"
+                      className="h-full w-auto object-cover"
                       src={
                         selectedImg
                           ? `${IMAGE_URL}/admin/product/gallery/${selectedImg}`
@@ -324,35 +325,35 @@ const Single = () => {
                     />
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 ">
                     <button
                       onClick={() => setSelectedImg("")}
-                      className="w-1/4 h-auto cursor-pointer hover:shadow-sm"
+                      className="w-32 h-auto cursor-pointer border border-gray-200 hover:shadow-sm"
                     >
                       <img
                         src={`${IMAGE_URL}/admin/product/${data.product_image}`}
                         alt="Product view"
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto object-cover"
                       />
                     </button>
 
                     {data?.image_gallary?.map((item, i) => (
                       <button
                         onClick={() => setSelectedImg(item)}
-                        className="w-1/4 h-auto cursor-pointer hover:shadow-sm"
+                        className="w-32 h-auto cursor-pointer hover:shadow-sm border border-gray-200"
                         key={i}
                       >
                         <img
                           src={`${IMAGE_URL}/admin/product/gallery/${item}`}
                           alt={`Product view ${i + 1}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-auto object-cover"
                         />
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="md:flex-1 px-4">
+                <div className="md:flex-1 px-4 lg:pt-0 pt-5">
                   <p className="text-gray-600 text-sm mb-4">{data.select_category}</p>
 
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">{data.product_name}</h2>
@@ -376,7 +377,7 @@ const Single = () => {
                   </div>
 
                   <div>
-                    <span className="font-bold text-gray-700">Product Description:</span>
+                    {/* <span className="font-bold text-gray-700">Product Description:</span> */}
                     <div className="text-gray-600 text-sm mt-2">
                       {data.p_short_des?.split(",").map((line, index) => (
                         <p key={index} className="mb-1">
@@ -396,7 +397,7 @@ const Single = () => {
                         className={`px-3 py-1 border rounded text-sm font-medium transition cursor-pointer
                           ${
                             selectedSize === size
-                              ? "bg-blue-600 text-white border-blue-600"
+                              ? "bg-black text-white border-black"
                               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
                           }`}
                       >
@@ -416,7 +417,7 @@ const Single = () => {
                             onClick={() => setSelectedColor(color)}
                             className={`w-8 h-8 rounded border-2 transition-all ${
                               selectedColor?.code === color.code
-                                ? "border-black shadow-md"
+                                ? "border-[#bd7b00] shadow-md"
                                 : "border-gray-300"
                             } hover:shadow-sm`}
                             style={{ backgroundColor: color.code }}
@@ -432,7 +433,7 @@ const Single = () => {
                   )}
 
                   {/* ✅ Recommended for you (Checkbox) */}
-                  {recommendedList.length > 0 && (
+                  {/* {recommendedList.length > 0 && (
                     <div className="mt-5 rounded-xl border border-gray-200 p-4">
                       <div className="flex items-center justify-between mb-3">
                         <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
@@ -504,29 +505,29 @@ const Single = () => {
                         })}
                       </div>
                     </div>
-                  )}
+                  )} */}
 
-                  <div className="w-full my-4">
+                 {/*  <div className="w-full my-4">
                     <button
                       onClick={handleOrderNow}
-                      className="w-full bg-[#AD0101] text-white py-3 rounded px-4 font-bold hover:bg-[#f6a503] cursor-pointer flex gap-2 justify-center items-center transition-colors"
+                      className="w-full bg-[#DF263A] text-white py-3 rounded px-4 font-bold hover:bg-[#b61525] cursor-pointer flex gap-2 justify-center items-center transition-colors"
                     >
                       <FaCartShopping size={25} /> ক্যাশ অন ডেলিভারিতে অর্ডার করুণ
                     </button>
-                  </div>
+                  </div> */}
 
-                  <div className="flex gap-4 mb-4">
+                  <div className="flex gap-4 mb-4 lg:mt-0 mt-4">
                     <div className="w-full">
                       {isInCart ? (
-                        <button className="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full">
-                          <Link to="/cart" className="py-2 h-full px-4 w-full">
+                        <button onClick={()=>setIsCartOpen(true)} className="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full">
+                         
                             কার্ট দেখুন
-                          </Link>
+                          
                         </button>
                       ) : (
                         <button
                           onClick={handleAddToCart}
-                          className="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full"
+                          className="bg-[#ffffff] text-black border border-gray-300 font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full"
                         >
                           কার্টে রাখুন
                         </button>
@@ -536,7 +537,7 @@ const Single = () => {
                     <div className="w-full">
                       <button
                         onClick={handleOrderNow}
-                        className="bg-[#00A63E] text-white font-bold py-2 px-4 rounded-md hover:bg-[#ffff00] hover:text-black transition duration-300 cursor-pointer w-full"
+                        className="bg-[#DF263A] text-white font-bold py-2 px-4 rounded-md hover:bg-[#b61525] hover:text-white transition duration-300 cursor-pointer w-full"
                       >
                         অর্ডার করুন
                       </button>
@@ -546,29 +547,33 @@ const Single = () => {
                   <div className="w-full flex gap-2">
                     <Link
                       target="_blank"
-                      to="https://wa.me/+8801851003265"
-                      className="w-full bg-[#25D366] text-white py-2 px-4 font-bold hover:bg-[#25d365d0] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
+                      to="https://wa.me/8801607975724"
+                      className="w-full bg-[#000000] text-white py-2 px-4 font-bold hover:bg-[#292929] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
                     >
                       <IoLogoWhatsapp size={25} /> WhatsApp
                     </Link>
                     <Link
                       target="_blank"
-                      to="https://web.facebook.com/messages/t/116061797769426/"
-                      className="w-full bg-[#0863F7] text-white py-2 px-4 font-bold hover:bg-[#0864f7c9] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
+                      to="https://web.facebook.com/messages/t/633689039818544/"
+                      className="w-full bg-[#000000] text-white py-2 px-4 font-bold hover:bg-[#292929] cursor-pointer flex gap-2 justify-center items-center transition-colors rounded"
                     >
                       <RiMessengerLine size={25} /> Messenger
                     </Link>
                   </div>
+                   <ProductDisclaimerTrust />
                 </div>
+                
+              </div>
+
+               <div className="lg:py-8 rounded border border-slate-200 bg-white p-4 sm:p-5 shadow-sm mt-5">
+                <div className="text-2xl font-bold text-gray-800 border-b border-gray-300">Description</div>
+                <div className="mt-2 text-gray-700">{data.product_description}</div>
               </div>
 
               {/* Disclaimer */}
-              <ProductDisclaimerTrust />
+              {/* <ProductDisclaimerTrust /> */}
 
-              <div className="lg:py-8 rounded border border-slate-200 bg-white p-4 sm:p-5 shadow-sm mt-5">
-                <div className="text-2xl font-bold text-gray-800">Description</div>
-                <div className="mt-2 text-gray-700">{data.product_description}</div>
-              </div>
+             
             </div>
           </div>
 
