@@ -161,7 +161,7 @@ const Header = ({ menuopen, setMenuOpen, setIsCartOpen }) => {
               {/* Left section */}
               <div className="hidden lg:flex items-center gap-6 text-[rgb(51 51 51)]">
                 <Link
-                  to="/stores"
+                  to="/outlets"
                   className="flex items-center gap-2 text-[18px] hover:text-[#DF263A] whitespace-nowrap"
                 >
                   <svg

@@ -174,18 +174,18 @@ export default function MainFooter({
             </div> */}
 
             <div className="text-[16px] text-center">
-              © {year} <span className="font-semibold text-black">RBIN</span>.
+              © {year} <span className="font-semibold text-black"></span>
               <span className="ml-1">
                 Orbin Fashion All rights reserved.
               </span>
               <span className="mx-2 text-black">|</span>
               <span>
                 Designed and Develop by{" "}
-                <span className="font-semibold text-black">{devName}</span>
+                <a href="https://www.spariqo.com/" target="_blank" className="font-semibold text-black bg-[#FEE4EA]">{devName}</a>
               </span>
             </div>
             <span className="text-center text-[16px]">
-              <a href="https://www.spariqo.com/">https://www.spariqo.com/</a>
+              <a target="_blank" href="https://www.spariqo.com/">https://www.spariqo.com/</a>
             </span>
           </div>
 
