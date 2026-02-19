@@ -184,9 +184,9 @@ export default function MainFooter({
                 <a href="https://www.spariqo.com/" target="_blank" className="font-semibold text-black bg-[#FEE4EA]">{devName}</a>
               </span>
             </div>
-            <span className="text-center text-[16px]">
+        {/*     <span className="text-center text-[16px]">
               <a target="_blank" href="https://www.spariqo.com/">https://www.spariqo.com/</a>
-            </span>
+            </span> */}
           </div>
 
           {/* Payments */}
