@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useOutletContext, useParams } from "react-router-dom";
@@ -98,7 +99,12 @@ function upsertCartItem(cart, product, qtyToAdd = 1) {
     next[idx] = { ...next[idx], quantity: prevQty + addQty };
   } else {
     // recommended items might not have selectedSize/color; keep null for those fields if your cart supports
-    next.push({ ...product, quantity: addQty, selectedColor: null, selectedSize: null });
+    next.push({
+      ...product,
+      quantity: addQty,
+      selectedColor: null,
+      selectedSize: null,
+    });
   }
 
   return next;
@@ -121,7 +127,6 @@ const Single = () => {
   const [relatedLoading, setRelatedLoading] = useState(true);
 
   const [selectedImg, setSelectedImg] = useState(null);
-
 
   // ✅ also pull setCart so we can update UI totals everywhere instantly
   const { cart, addToCart, orderNow, setCart } = useContext(CartContext);
@@ -171,6 +176,7 @@ const Single = () => {
       purple: "#800080",
       pink: "#FFC0CB",
       brown: "#A52A2A",
+      chocolate: "#7B3F00",
     };
     const normalizedColor = colorName?.toLowerCase().trim();
     return colorMap[normalizedColor] || "#CCCCCC";
@@ -185,24 +191,23 @@ const Single = () => {
 
   const [selectedColor, setSelectedColor] = useState(null);
 
-useEffect(() => {
-  // default color
-  if (data?.color) {
-    const firstColor = data.color.split(",")[0].trim();
-    setSelectedColor({ name: firstColor, code: getColorCode(firstColor) });
-  } else {
-    setSelectedColor(null);
-  }
+  useEffect(() => {
+    // default color
+    if (data?.color) {
+      const firstColor = data.color.split(",")[0].trim();
+      setSelectedColor({ name: firstColor, code: getColorCode(firstColor) });
+    } else {
+      setSelectedColor(null);
+    }
 
-  // default size
-  if (data?.size) {
-    const firstSize = data.size.split(",")[0].trim();
-    setSelectedSize(firstSize);
-  } else {
-    setSelectedSize(null);
-  }
-}, [data]);
-
+    // default size
+    if (data?.size) {
+      const firstSize = data.size.split(",")[0].trim();
+      setSelectedSize(firstSize);
+    } else {
+      setSelectedSize(null);
+    }
+  }, [data]);
 
   /* Data loading functions */
   const loadData = async () => {
@@ -225,10 +230,12 @@ useEffect(() => {
   const loadRelatedProducts = async (select_category, currentProductId) => {
     setRelatedLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/products/category/${select_category}`);
+      const response = await fetch(
+        `${BASE_URL}/products/category/${select_category}`,
+      );
       const result = await response.json();
       const filteredProducts = result[0].filter(
-        (product) => product.id !== parseInt(currentProductId)
+        (product) => product.id !== parseInt(currentProductId),
       );
       setRelatedProducts(filteredProducts);
     } catch (error) {
@@ -321,7 +328,7 @@ useEffect(() => {
         <div>
           <div className="bg-white-100 py-8 mt-10 lg:pt-25">
             <div className=" mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col md:flex-row -mx-4 align-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 -mx-4 align-center">
                 <div className="md:flex-1 px-4">
                   <div className="lg:h-[460px] text-center flex justify-center rounded-lg bg-white mb-4 border border-gray-100 p-2">
                     <img
@@ -335,28 +342,31 @@ useEffect(() => {
                     />
                   </div>
 
-                  <div className="flex gap-4 ">
+                  {/* Product Gallary */}
+                  {/* Product Gallery Slider */}
+                  <div className="flex gap-4 overflow-x-auto py-2">
+                    {/* Main image thumbnail */}
                     <button
                       onClick={() => setSelectedImg("")}
-                      className="w-32 h-auto cursor-pointer border border-gray-200 hover:shadow-sm"
+                      className="min-w-[80px] h-auto cursor-pointer border border-gray-200 hover:shadow-sm flex-shrink-0"
                     >
                       <img
                         src={`${IMAGE_URL}/admin/product/${data.product_image}`}
                         alt="Product view"
-                        className="w-full h-auto object-cover"
+                        className="w-24 h-auto object-cover"
                       />
                     </button>
 
                     {data?.image_gallary?.map((item, i) => (
                       <button
                         onClick={() => setSelectedImg(item)}
-                        className="w-32 h-auto cursor-pointer hover:shadow-sm border border-gray-200"
+                        className="min-w-[80px] h-auto cursor-pointer hover:shadow-sm border border-gray-200 flex-shrink-0"
                         key={i}
                       >
                         <img
                           src={`${IMAGE_URL}/admin/product/gallery/${item}`}
                           alt={`Product view ${i + 1}`}
-                          className="w-full h-auto object-cover"
+                          className="w-24 h-auto object-cover"
                         />
                       </button>
                     ))}
@@ -364,9 +374,13 @@ useEffect(() => {
                 </div>
 
                 <div className="md:flex-1 px-4 lg:pt-0 pt-5">
-                  <p className="text-gray-600 text-sm mb-4">{data.select_category}</p>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {data.select_category}
+                  </p>
 
-                  <h2 className="text-3xl font-bold text-gray-800 mb-2">{data.product_name}</h2>
+                  <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                    {data.product_name}
+                  </h2>
 
                   <div className="flex mb-4">
                     <div className="mr-4">
@@ -381,7 +395,9 @@ useEffect(() => {
                     </div>
 
                     <div>
-                      <span className="font-bold text-gray-700 text-xl">Availability: </span>
+                      <span className="font-bold text-gray-700 text-xl">
+                        Availability:{" "}
+                      </span>
                       <span className="text-gray-600">{data.availability}</span>
                     </div>
                   </div>
@@ -419,7 +435,9 @@ useEffect(() => {
                   {/* Color */}
                   {colors.length > 0 && (
                     <div className="mt-4">
-                      <span className="font-bold text-gray-700">Choose Color:</span>
+                      <span className="font-bold text-gray-700">
+                        Choose Color:
+                      </span>
                       <div className="flex gap-2 mt-2">
                         {colors.map((color, index) => (
                           <button
@@ -437,7 +455,9 @@ useEffect(() => {
                         ))}
                       </div>
                       {selectedColor && (
-                        <p className="text-sm text-gray-600 mt-1">Selected: {selectedColor.name}</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Selected: {selectedColor.name}
+                        </p>
                       )}
                     </div>
                   )}
@@ -517,7 +537,7 @@ useEffect(() => {
                     </div>
                   )} */}
 
-                 {/*  <div className="w-full my-4">
+                  {/*  <div className="w-full my-4">
                     <button
                       onClick={handleOrderNow}
                       className="w-full bg-[#DF263A] text-white py-3 rounded px-4 font-bold hover:bg-[#b61525] cursor-pointer flex gap-2 justify-center items-center transition-colors"
@@ -529,10 +549,11 @@ useEffect(() => {
                   <div className="flex gap-4 mb-4 lg:mt-0 mt-4">
                     <div className="w-full">
                       {isInCart ? (
-                        <button onClick={()=>setIsCartOpen(true)} className="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full">
-                         
-                            কার্ট দেখুন
-                          
+                        <button
+                          onClick={() => setIsCartOpen(true)}
+                          className="bg-[black] text-white font-bold py-2 px-4 rounded-md hover:bg-[#313131] hover:text-white transition duration-300 cursor-pointer w-full"
+                        >
+                          কার্ট দেখুন
                         </button>
                       ) : (
                         <button
@@ -570,20 +591,21 @@ useEffect(() => {
                       <RiMessengerLine size={25} /> Messenger
                     </Link>
                   </div>
-                   <ProductDisclaimerTrust />
+                  <ProductDisclaimerTrust />
                 </div>
-                
               </div>
 
-               <div className="lg:py-8 rounded border border-slate-200 bg-white p-4 sm:p-5 shadow-sm mt-5">
-                <div className="text-2xl font-bold text-gray-800 border-b border-gray-300">Description</div>
-                <div className="mt-2 text-gray-700">{data.product_description}</div>
+              <div className="lg:py-8 rounded border border-slate-200 bg-white p-4 sm:p-5 shadow-sm mt-5">
+                <div className="text-2xl font-bold text-gray-800 border-b border-gray-300">
+                  Description
+                </div>
+                <div className="mt-2 text-gray-700">
+                  {data.product_description}
+                </div>
               </div>
 
               {/* Disclaimer */}
               {/* <ProductDisclaimerTrust /> */}
-
-             
             </div>
           </div>
 

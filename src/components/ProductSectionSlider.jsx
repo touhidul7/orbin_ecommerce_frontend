@@ -46,6 +46,7 @@ const ProductSectionSlider = ({ loading, data = [], className = "" }) => {
             purple: "#800080",
             pink: "#FFC0CB",
             brown: "#A52A2A",
+            chocolate: "#7B3F00",
         };
         const normalizedColor = colorName?.toLowerCase().trim();
         return colorMap[normalizedColor] || "#CCCCCC";
