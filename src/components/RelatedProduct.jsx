@@ -9,8 +9,8 @@ const RelatedProduct = ({ products, loading }) => {
   return (
     products.length != 0 ? (
       <div style={{ marginTop: "30px" }}>
-        <div class="px-8">
-          <div class="mb-4 flex items-center justify-between gap-4 md:mb-8">
+        <div class="lg:px-8 md:px-2">
+          <div class="mb-4 flex items-center justify-between gap-4 md:mb-8 lg:px-0 px-6">
             <h2 class="text-xl font-semibold text-gray-900  sm:text-2xl">
               Related Products
             </h2>

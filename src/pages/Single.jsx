@@ -10,19 +10,6 @@ import { FaCartShopping } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import ProductDisclaimerTrust from "../components/ProductDisclaimerTrust";
 
-/**
- * ✅ Added feature:
- * - "Recommended for you" with CHECKBOXES on this page
- * - If checked -> product added to cart
- * - If unchecked -> product removed from cart
- * - Cart totals etc. update because we update localStorage + CartContext setCart
- *
- * ✅ Recommended source:
- * - Uses current product's `recommended_product` (array / stringified JSON / null)
- * - Dedupe by id
- * - Exclude items already in cart
- */
-
 function safeJsonParse(value) {
   if (typeof value !== "string") return null;
   try {
@@ -59,7 +46,6 @@ function normalizeRecommendedProducts(product, options = { depth: 1 }) {
 
       pushUnique(obj);
 
-      // prevent infinite nesting (default 1)
       if (d > 0) read(obj, d - 1);
     }
   };
@@ -98,7 +84,6 @@ function upsertCartItem(cart, product, qtyToAdd = 1) {
     const prevQty = Number(next[idx]?.quantity || 1);
     next[idx] = { ...next[idx], quantity: prevQty + addQty };
   } else {
-    // recommended items might not have selectedSize/color; keep null for those fields if your cart supports
     next.push({
       ...product,
       quantity: addQty,
@@ -128,7 +113,9 @@ const Single = () => {
 
   const [selectedImg, setSelectedImg] = useState(null);
 
-  // ✅ also pull setCart so we can update UI totals everywhere instantly
+  // ✅ NEW: image preview modal
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
   const { cart, addToCart, orderNow, setCart } = useContext(CartContext);
 
   const [selectedSize, setSelectedSize] = useState(null);
@@ -142,7 +129,6 @@ const Single = () => {
     return (cart || []).some((item) => Number(item.id) === pid);
   }, [cart, data]);
 
-  /* Track product view when data loads */
   useEffect(() => {
     if (data) {
       window.dataLayer?.push({
@@ -162,7 +148,6 @@ const Single = () => {
     }
   }, [data]);
 
-  /* Color handling functions */
   const getColorCode = (colorName) => {
     const colorMap = {
       yellow: "#FFFF00",
@@ -193,7 +178,6 @@ const Single = () => {
   const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
-    // default color
     if (data?.color) {
       const firstColor = data.color.split(",")[0].trim();
       setSelectedColor({ name: firstColor, code: getColorCode(firstColor) });
@@ -201,7 +185,6 @@ const Single = () => {
       setSelectedColor(null);
     }
 
-    // default size
     if (data?.size) {
       const firstSize = data.size.split(",")[0].trim();
       setSelectedSize(firstSize);
@@ -210,7 +193,6 @@ const Single = () => {
     }
   }, [data]);
 
-  /* Data loading functions */
   const loadData = async () => {
     setLoading(true);
     try {
@@ -231,12 +213,10 @@ const Single = () => {
   const loadRelatedProducts = async (select_category, currentProductId) => {
     setRelatedLoading(true);
     try {
-      const response = await fetch(
-        `${BASE_URL}/products/category/${select_category}`,
-      );
+      const response = await fetch(`${BASE_URL}/products/category/${select_category}`);
       const result = await response.json();
       const filteredProducts = result[0].filter(
-        (product) => product.id !== parseInt(currentProductId),
+        (product) => product.id !== parseInt(currentProductId)
       );
       setRelatedProducts(filteredProducts);
     } catch (error) {
@@ -246,14 +226,12 @@ const Single = () => {
     }
   };
 
-  // ✅ Recommended list from CURRENT PRODUCT
   const recommendedList = useMemo(() => {
     if (!data) return [];
 
     const recs = normalizeRecommendedProducts(data, { depth: 1 });
     const inCartIds = new Set((cart || []).map((c) => Number(c.id)));
 
-    // exclude items already in cart + dedupe already handled in normalize
     return recs.filter((p) => {
       const rid = Number(p?.id);
       if (!rid) return false;
@@ -281,10 +259,9 @@ const Single = () => {
     }
 
     setCartToStorage(next);
-    setCart?.(next); // ✅ update context state (if provided)
+    setCart?.(next);
   };
 
-  // Handlers for cart actions
   const handleAddToCart = () => {
     if (colors.length > 0 && !selectedColor) {
       alert("Please select a color first");
@@ -316,7 +293,38 @@ const Single = () => {
     loadData();
     setSelectedImg(null);
     setSelectedSize(null);
+    setIsPreviewOpen(false);
   }, [id]);
+
+  // ✅ NEW: helpers for preview
+  const currentImageSrc = useMemo(() => {
+    if (!data) return "";
+    return selectedImg
+      ? `${IMAGE_URL}/admin/product/gallery/${selectedImg}`
+      : `${IMAGE_URL}/admin/product/${data.product_image}`;
+  }, [data, selectedImg, IMAGE_URL]);
+
+  const openPreview = () => {
+    if (!currentImageSrc) return;
+    setIsPreviewOpen(true);
+  };
+
+  const closePreview = () => setIsPreviewOpen(false);
+
+  useEffect(() => {
+    if (!isPreviewOpen) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closePreview();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isPreviewOpen]);
 
   return (
     <>
@@ -331,22 +339,28 @@ const Single = () => {
             <div className=" mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-1 md:grid-cols-2 -mx-4 align-center">
                 <div className="md:flex-1 px-4">
-                  <div className="lg:h-[460px] text-center flex justify-center rounded-lg bg-white mb-4 border border-gray-100 p-2">
+                  {/* ✅ selected / on-view Product Image (Hover zoom + click popup) */}
+                  <div
+                    className="lg:h-[460px] text-center flex justify-center rounded-lg bg-white mb-4 border border-gray-100 p-2 group relative overflow-hidden cursor-zoom-in"
+                    onClick={openPreview}
+                    title="Click to zoom"
+                  >
+                    {/* small hint on hover */}
+                    <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition">
+                      <span className="text-xs bg-black/70 text-white px-2 py-1 rounded">
+                        Click to zoom
+                      </span>
+                    </div>
+
                     <img
-                      className="h-full w-auto object-cover"
-                      src={
-                        selectedImg
-                          ? `${IMAGE_URL}/admin/product/gallery/${selectedImg}`
-                          : `${IMAGE_URL}/admin/product/${data.product_image}`
-                      }
+                      className="h-full w-auto object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                      src={currentImageSrc}
                       alt={data.product_name}
                     />
                   </div>
 
-                  {/* Product Gallary */}
                   {/* Product Gallery Slider */}
                   <div className="flex gap-4 overflow-x-auto py-2">
-                    {/* Main image thumbnail */}
                     <button
                       onClick={() => setSelectedImg("")}
                       className="min-w-[80px] h-auto cursor-pointer border border-gray-200 hover:shadow-sm flex-shrink-0"
@@ -375,9 +389,7 @@ const Single = () => {
                 </div>
 
                 <div className="md:flex-1 px-4 lg:pt-0 pt-5">
-                  <p className="text-gray-600 text-sm mb-4">
-                    {data.select_category}
-                  </p>
+                  <p className="text-gray-600 text-sm mb-4">{data.select_category}</p>
 
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">
                     {data.product_name}
@@ -404,7 +416,6 @@ const Single = () => {
                   </div>
 
                   <div>
-                    {/* <span className="font-bold text-gray-700">Product Description:</span> */}
                     <div className="text-gray-600 text-sm mt-2">
                       {data.p_short_des?.split(",").map((line, index) => (
                         <p key={index} className="mb-1">
@@ -436,9 +447,7 @@ const Single = () => {
                   {/* Color */}
                   {colors.length > 0 && (
                     <div className="mt-4">
-                      <span className="font-bold text-gray-700">
-                        Choose Color:
-                      </span>
+                      <span className="font-bold text-gray-700">Choose Color:</span>
                       <div className="flex gap-2 mt-2">
                         {colors.map((color, index) => (
                           <button
@@ -449,25 +458,12 @@ const Single = () => {
                                 ? "border-[#bd7b00] shadow-md"
                                 : "border-gray-300"
                             } hover:shadow-sm px-1`}
-                            // style={{ backgroundColor: color.code }}
                             title={color.name}
                             aria-label={`Select color ${color.name}`}
-                          >{color.name}</button>
+                          >
+                            {color.name}
+                          </button>
                         ))}
-                        {/* {colors.map((color, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedColor(color)}
-                            className={`w-8 h-8 rounded border-2 transition-all ${
-                              selectedColor?.name === color.code
-                                ? "border-[#bd7b00] shadow-md"
-                                : "border-gray-300"
-                            } hover:shadow-sm`}
-                            style={{ backgroundColor: color.code }}
-                            title={color.name}
-                            aria-label={`Select color ${color.name}`}
-                          />
-                        ))} */}
                       </div>
                       {selectedColor && (
                         <p className="text-sm text-gray-600 mt-1">
@@ -476,90 +472,6 @@ const Single = () => {
                       )}
                     </div>
                   )}
-
-                  {/* ✅ Recommended for you (Checkbox) */}
-                  {/* {recommendedList.length > 0 && (
-                    <div className="mt-5 rounded-xl border border-gray-200 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-base font-semibold text-gray-900">Recommended for you</h3>
-                        <span className="text-xs text-gray-500">Select to include</span>
-                      </div>
-
-                      <div className="space-y-3">
-                        {recommendedList.map((p) => {
-                          const sell = formatPrice(p.selling_price);
-                          const reg = formatPrice(p.regular_price);
-                          const hasDiscount = reg > sell;
-
-                          const checked = isRecChecked(p.id);
-
-                          return (
-                            <label
-                              key={p.id}
-                              className="flex items-start gap-3 rounded-xl border border-gray-100 p-3 hover:bg-gray-50 transition cursor-pointer"
-                            >
-                              <div className="pt-1">
-                                <input
-                                  type="checkbox"
-                                  checked={checked}
-                                  onChange={(e) => toggleRecommended(p, e.target.checked)}
-                                  className="h-4 w-4 accent-black cursor-pointer"
-                                />
-                              </div>
-
-                              <div className="h-14 w-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
-                                {p.product_image ? (
-                                  <img
-                                    src={`${IMAGE_URL}/admin/product/${p.product_image}`}
-                                    alt={p.product_name}
-                                    className="h-full w-full object-cover"
-                                    onError={(e) => {
-                                      e.currentTarget.style.display = "none";
-                                    }}
-                                  />
-                                ) : null}
-                              </div>
-
-                              <div className="flex-1">
-                                <p className="text-sm font-semibold text-gray-900 leading-snug">
-                                  {p.product_name}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  {p.select_category}
-                                  {p.select_sub_category ? ` • ${p.select_sub_category}` : ""}
-                                </p>
-
-                                <div className="mt-1 flex items-center gap-2">
-                                  <span className="text-sm font-bold">৳ {sell}</span>
-                                  {hasDiscount && (
-                                    <span className="text-xs text-gray-500 line-through">
-                                      ৳ {reg}
-                                    </span>
-                                  )}
-                                  <span className="text-xs text-gray-500">
-                                    {p.availability || "In Stock"}
-                                  </span>
-                                </div>
-
-                                <div className="mt-2 text-xs text-gray-500">
-                                  {checked ? "Included in your cart ✅" : "Not included"}
-                                </div>
-                              </div>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )} */}
-
-                  {/*  <div className="w-full my-4">
-                    <button
-                      onClick={handleOrderNow}
-                      className="w-full bg-[#DF263A] text-white py-3 rounded px-4 font-bold hover:bg-[#b61525] cursor-pointer flex gap-2 justify-center items-center transition-colors"
-                    >
-                      <FaCartShopping size={25} /> ক্যাশ অন ডেলিভারিতে অর্ডার করুণ
-                    </button>
-                  </div> */}
 
                   <div className="flex gap-4 mb-4 lg:mt-0 mt-4">
                     <div className="w-full">
@@ -614,17 +526,54 @@ const Single = () => {
                 <div className="text-2xl font-bold text-gray-800 border-b border-gray-300">
                   Description
                 </div>
-                <div className="mt-2 text-gray-700">
-                  {data.product_description}
-                </div>
+                <div className="mt-2 text-gray-700">{data.product_description}</div>
               </div>
-
-              {/* Disclaimer */}
-              {/* <ProductDisclaimerTrust /> */}
             </div>
           </div>
 
           <RelatedProduct products={relatedProducts} loading={relatedLoading} />
+        </div>
+      )}
+
+      {/* ✅ IMAGE PREVIEW MODAL */}
+      {isPreviewOpen && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center p-4"
+          onClick={closePreview}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="relative max-w-5xl w-full bg-white rounded-xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* top bar */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <div className="text-sm font-semibold text-gray-800 line-clamp-1">
+                {data?.product_name}
+              </div>
+              <button
+                onClick={closePreview}
+                className="px-3 py-1 rounded-md border border-gray-200 hover:bg-gray-50 text-sm font-semibold"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* image */}
+            <div className="bg-white flex items-center justify-center p-3">
+              <img
+                src={currentImageSrc}
+                alt={data?.product_name}
+                className="max-h-[75vh] w-auto object-contain select-none"
+              />
+            </div>
+
+            {/* hint */}
+            <div className="px-4 pb-4 text-xs text-gray-500">
+              Tip: press <span className="font-semibold">Esc</span> to close
+            </div>
+          </div>
         </div>
       )}
     </>
