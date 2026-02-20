@@ -6,80 +6,28 @@ import Alert from "../components/Alert";
 import { FaPlus } from "react-icons/fa";
 // import ReactPixel from 'react-facebook-pixel';
 const Cart = () => {
+  const { cart, totalPrice, increaseQuantity, decreaseQuantity, removeFromCart } =
+    useContext(CartContext);
 
-  const {
-    cart,
-    totalPrice,
-    increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
-  } = useContext(CartContext);
   const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
 
-
   useEffect(() => {
-
-
-    // if (cart.length > 0) {
-
-
-    //   ReactPixel.track('InitiateCheckout', {
-    //     content_ids: cart.map(item => item.id),
-    //     contents: cart.map(item => ({
-    //       id: item.id,
-    //       quantity: item.quantity,
-    //       item_price: item.selling_price
-    //     })),
-    //     content_type: 'product',
-    //     value: cart.reduce((sum, item) => sum + (item.selling_price * item.quantity), 0),
-    //     currency: 'BDT',
-    //     num_items: cart.length
-    //   });
-
-    // }
-
-
-    // Meta Pixel ViewCart
-    /* ReactPixel.track('ViewCart', {
-      content_ids: cart.map(item => item.id),
-      contents: cart.map(item => ({
-        id: item.id,
-        quantity: item.quantity,
-        item_price: item.selling_price
-      })),
-      content_type: 'product',
-      value: totalPrice,
-      currency: 'BDT',
-      num_items: cart.length
-    }); */
-
-    // Google Analytics view_cart
     window.dataLayer.push({
       event: "view_cart",
       ecommerce: {
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           item_id: item.id,
           item_name: item.product_name,
           price: item.selling_price,
           item_category: item.select_category,
-          quantity: item.quantity
+          quantity: item.quantity,
         })),
         value: totalPrice,
-        currency: "BDT"
-      }
+        currency: "BDT",
+      },
     });
-
-
-
-
-
-  }, [cart]);
-
-
-
-
-
+  }, [cart, totalPrice]);
 
   // console.log(cart);
   return (
@@ -109,10 +57,25 @@ const Cart = () => {
                       </a>
 
                       <div className="flex items-center justify-between md:order-3 md:justify-end gap-4">
-                        <div
+                        {/* <div
                           className={` w-8 h-8 border border-gray-200 rounded hover:shadow-sm cursor-pointer`}
                           style={{ backgroundColor: item.selectedColor }}
-                        ></div>
+                        ></div> */}
+
+                        <div className="flex items-center gap-2">
+                          {/* <div
+                            className="w-8 h-8 border border-gray-200 rounded hover:shadow-sm"
+                            style={{ backgroundColor: item.selectedColor }}
+                            title={getColorName(item)}
+                          /> */}
+                          <div className="text-sm text-gray-500 border border-gray-300 p-1 rounded">
+                           Color: {item.selectedColor}
+                          </div>
+                        </div>
+
+                        <div className="text-sm text-gray-500 border border-gray-300 p-1 rounded">
+                          Size: {item.selectedSize}
+                        </div>
                         <div className="flex items-center">
                           <button
                             onClick={() => decreaseQuantity(item.id)}
@@ -210,7 +173,7 @@ const Cart = () => {
                 <Link
                   to="/checkout"
                   className="flex w-full items-center justify-center rounded-lg bg-[#DF263A] px-5 py-3.5 text-sm font-medium text-white hover:bg-[#c51b2c] focus:outline-none focus:ring-4 focus:ring-blue-300 text-xl"
-                > 
+                >
                   ক্যাশ অন ডেলিভারিতে অর্ডার করুন
                 </Link>
                 <div className="flex items-center justify-center gap-2">

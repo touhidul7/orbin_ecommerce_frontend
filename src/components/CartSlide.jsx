@@ -15,7 +15,7 @@ const CartSlide = ({setIsCartOpen, isCartOpen}) => {
   const IMAGE_URL = import.meta.env.VITE_API_IMAGE_URL;
 
   // Helper function to process product colors
-  const processProductColors = (product) => {
+  /* const processProductColors = (product) => {
     if (!product.color) return [];
     const colorMap = {
       yellow: "#FFFF00",
@@ -29,17 +29,21 @@ const CartSlide = ({setIsCartOpen, isCartOpen}) => {
       purple: "#800080",
       pink: "#FFC0CB",
       brown: "#A52A2A",
+      chocolate: "#7B3F00",
+      master: "#DE7E01",
     };
     
     return product.color.split(",").map((color) => ({
       name: color.trim(),
       code: colorMap[color.trim().toLowerCase()] || "#CCCCCC"
     }));
-  };
+  }; */
 
   // Calculate total items and total price
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = cart.reduce((total, item) => total + (item.selling_price * item.quantity), 0).toFixed(2);
+
+  console.log("Cart Items:", cart);
 
   return (
     <>
@@ -77,9 +81,10 @@ const CartSlide = ({setIsCartOpen, isCartOpen}) => {
         <div className="p-4 overflow-y-auto flex flex-col gap-5 h-[calc(100%-180px)]">
           {cart.length > 0 ? (
             cart.map((item) => {
-              const colors = processProductColors(item);
+              // const colors = processProductColors(item);
               const selectedColor = item.selectedColor;
-              const colorName = colors.find(c => c.code === selectedColor)?.name;
+              const selectedSize = item.selectedSize;
+              // const colorName = colors.find(c => c.code === selectedColor)?.name;
 
               return (
                 <div key={`${item.id}-${selectedColor}`} className="flex items-center bg-gray-100 rounded-lg px-3 py-3">
@@ -96,13 +101,14 @@ const CartSlide = ({setIsCartOpen, isCartOpen}) => {
                     <h3 className="text-sm font-semibold">{item.product_name}</h3>
                     {selectedColor && (
                       <div className="flex items-center mt-1">
-                        <div 
+                       {/*  <div 
                           className="w-3 h-3 rounded-full mr-1 border border-gray-300"
                           style={{ backgroundColor: selectedColor }}
-                        />
-                        <span className="text-xs text-gray-500">{colorName}</span>
+                        /> */}
+                        <span className="text-xs text-gray-500"> Color: {selectedColor}</span>
                       </div>
                     )}
+                    <div className="text-xs text-gray-500 mt-1">Size: {selectedSize}</div>
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center">
                         <button

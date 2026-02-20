@@ -45,7 +45,9 @@ const OrderDtails = () => {
     } else {
       // For guest users, get the specific order from localStorage using the order ID
       const guestOrders = JSON.parse(localStorage.getItem("guestOrders")) || [];
-      const specificGuestOrder = guestOrders.find(order => order.order_id === id);
+      const specificGuestOrder = guestOrders.find(
+        (order) => order.order_id === id,
+      );
 
       if (specificGuestOrder) {
         setOrderData(specificGuestOrder);
@@ -65,16 +67,15 @@ const OrderDtails = () => {
   }
 
   const formatUrl = (str) => {
-    if (!str) return 'product'; // Fallback for null/undefined
+    if (!str) return "product"; // Fallback for null/undefined
     return str
       .toString() // Ensure it's a string
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/[^a-zA-Z0-9-]/g, '') // Remove special characters
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/[^a-zA-Z0-9-]/g, "") // Remove special characters
       .toLowerCase();
   };
 
   console.log(orderData);
-
 
   return (
     <section class="bg-white py-8 antialiased md:py-8 mt-20">
@@ -82,7 +83,6 @@ const OrderDtails = () => {
         <h2 class="mb-4 text-xl font-semibold text-gray-900  sm:text-2xl md:mb-6">
           Order overview
         </h2>
-        
 
         <div>
           <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 ">
@@ -100,10 +100,12 @@ const OrderDtails = () => {
                   Product Name:
                 </dt>
               </dl>
-              
 
               <dl class="w-1/2  lg:w-1/10 hidden lg:block">
                 <dt class="text-base font-medium text-gray-500 ">Color</dt>
+              </dl>
+              <dl class="w-1/2  lg:w-1/10 hidden lg:block">
+                <dt class="text-base font-medium text-gray-500 ">Size</dt>
               </dl>
               <dl class="w-1/2  lg:w-1/10 hidden lg:block">
                 <dt class="text-base font-medium text-gray-500 ">Category</dt>
@@ -123,9 +125,11 @@ const OrderDtails = () => {
                 class="flex flex-wrap items-center gap-y-4 border-b border-gray-200 pb-4 "
               >
                 <dl class="w-1/2  lg:w-1/10">
-
                   <dd class="mt-1.5 text-base font-semibold text-gray-900 ">
-                    <Link to={`/product/${product.id}/${formatUrl(product.product_name)}`} class="hover:underline">
+                    <Link
+                      to={`/product/${product.id}/${formatUrl(product.product_name)}`}
+                      class="hover:underline"
+                    >
                       <img
                         src={`${IMAGE_URL}/admin/product/${product.product_image}`}
                         className="w-8 h-8"
@@ -139,33 +143,49 @@ const OrderDtails = () => {
                     <dt class="text-base font-medium text-gray-500 ">Name</dt>
                   </dl>
                   <dd class="mt-1.5 text-base font-semibold text-gray-900 ">
-                    <Link to={`/product/${product.id}/${formatUrl(product.product_name)}`} class="hover:underline">
+                    <Link
+                      to={`/product/${product.id}/${formatUrl(product.product_name)}`}
+                      class="hover:underline"
+                    >
                       {product?.product_name}
                     </Link>
                   </dd>
                 </dl>
 
-                {product?.selectedColor &&
-
+                {product?.selectedColor && (
                   <dl class="w-1/2  lg:w-1/10">
                     <dl class="w-1/2  lg:w-1/10 lg:hidden block">
-                      <dt class="text-base font-medium text-gray-500 ">Selected Color</dt>
+                      <dt class="text-base font-medium text-gray-500 ">
+                        Color
+                      </dt>
                     </dl>
                     <dd class="mt-1.5 text-base font-semibold text-gray-900 ">
-                      {/* {product?.selectedColor} */}
-                      <div
-                          className={` w-8 h-8 border border-gray-200 rounded hover:shadow-sm cursor-pointer`}
-                          style={{ backgroundColor: product.selectedColor }}
-                        ></div>
+                      <div className="text-sm w-fit text-gray-500 border border-gray-300 p-1 rounded">
+                        Color: {product.selectedColor}
+                      </div>
                     </dd>
                   </dl>
-
-                }
-
+                )}
+                {product?.selectedSize && (
+                  <dl class="w-1/2  lg:w-1/10">
+                    <dl class="w-1/2  lg:w-1/10 lg:hidden block">
+                      <dt class="text-base font-medium text-gray-500 ">
+                        Size
+                      </dt>
+                    </dl>
+                    <dd class="mt-1.5 text-base font-semibold text-gray-900 ">
+                      <div className="text-sm w-fit text-gray-500 border border-gray-300 p-1 rounded">
+                        Size: {product.selectedSize}
+                      </div>
+                    </dd>
+                  </dl>
+                )}
 
                 <dl class="w-1/2  lg:w-1/10">
                   <dl class="w-1/2  lg:w-1/10 lg:hidden block">
-                    <dt class="text-base font-medium text-gray-500 ">Category</dt>
+                    <dt class="text-base font-medium text-gray-500 ">
+                      Category
+                    </dt>
                   </dl>
                   <dd class="mt-1.5 text-base font-semibold text-gray-900 ">
                     {product?.select_category}
@@ -183,7 +203,9 @@ const OrderDtails = () => {
 
                 <dl class="w-1/2  lg:w-1/10">
                   <dl class="w-1/2  lg:w-1/10 lg:hidden block">
-                    <dt class="text-base font-medium text-gray-500 ">Quantity</dt>
+                    <dt class="text-base font-medium text-gray-500 ">
+                      Quantity
+                    </dt>
                   </dl>
                   <dd class="me-2 mt-1.5 inline-flex shrink-0 items-center rounded text-base px-2.5 py-0.5  font-medium text-gray-900">
                     {product?.quantity}

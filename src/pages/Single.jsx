@@ -177,6 +177,7 @@ const Single = () => {
       pink: "#FFC0CB",
       brown: "#A52A2A",
       chocolate: "#7B3F00",
+      master: "#DE7E01",
     };
     const normalizedColor = colorName?.toLowerCase().trim();
     return colorMap[normalizedColor] || "#CCCCCC";
@@ -294,7 +295,7 @@ const Single = () => {
       return;
     }
 
-    addToCart(data, selectedColor?.code, selectedSize || null);
+    addToCart(data, selectedColor?.name, selectedSize || null);
     setIsCartOpen(!isCartOpen);
   };
 
@@ -308,7 +309,7 @@ const Single = () => {
       return;
     }
 
-    orderNow(data, selectedColor?.code, selectedSize || null);
+    orderNow(data, selectedColor?.name, selectedSize || null);
   };
 
   useEffect(() => {
@@ -443,8 +444,22 @@ const Single = () => {
                           <button
                             key={index}
                             onClick={() => setSelectedColor(color)}
+                            className={` rounded border-2 transition-all ${
+                              selectedColor?.name === color.name
+                                ? "border-[#bd7b00] shadow-md"
+                                : "border-gray-300"
+                            } hover:shadow-sm px-1`}
+                            // style={{ backgroundColor: color.code }}
+                            title={color.name}
+                            aria-label={`Select color ${color.name}`}
+                          >{color.name}</button>
+                        ))}
+                        {/* {colors.map((color, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedColor(color)}
                             className={`w-8 h-8 rounded border-2 transition-all ${
-                              selectedColor?.code === color.code
+                              selectedColor?.name === color.code
                                 ? "border-[#bd7b00] shadow-md"
                                 : "border-gray-300"
                             } hover:shadow-sm`}
@@ -452,7 +467,7 @@ const Single = () => {
                             title={color.name}
                             aria-label={`Select color ${color.name}`}
                           />
-                        ))}
+                        ))} */}
                       </div>
                       {selectedColor && (
                         <p className="text-sm text-gray-600 mt-1">

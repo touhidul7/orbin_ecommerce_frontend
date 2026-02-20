@@ -30,13 +30,13 @@ export const CartProvider = ({ children }) => {
     };
 
     // add to cart
-    const addToCart = (product, selectedColor) => {
+    const addToCart = (product, selectedColor, selectedSize) => {
         let updatedCart = [...cart];
         const existingProduct = updatedCart.find(item => item.id === product.id);
         if (existingProduct) {
             existingProduct.quantity += 1;
         } else {
-            updatedCart.push({ ...product, quantity: 1, selectedColor });
+            updatedCart.push({ ...product, quantity: 1, selectedColor, selectedSize });
             
             // Track AddToCart event
           /*   ReactPixel.track('AddToCart', {
@@ -73,7 +73,7 @@ export const CartProvider = ({ children }) => {
     };
 
     // add Order
-    const orderNow = (product,selectedColor) => {
+    const orderNow = (product,selectedColor,selectedSize) => {
         let updatedCart = [...cart];
         const existingProduct = updatedCart.find(item => item.id === product.id);
         if (existingProduct) {
@@ -82,7 +82,7 @@ export const CartProvider = ({ children }) => {
             // navigate('/checkout')
             setIsCheckoutPopup(true);
         } else {
-            updatedCart.push({ ...product, quantity: 1, selectedColor });
+            updatedCart.push({ ...product, quantity: 1, selectedColor, selectedSize });
             toast.success("Product added to cart!");
             // navigate('/checkout')
             setIsCheckoutPopup(true);
