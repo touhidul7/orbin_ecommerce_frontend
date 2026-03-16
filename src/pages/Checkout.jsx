@@ -9,66 +9,110 @@ import CartSection from "../components/CartSection";
 // import { sha256 } from '../utils/hash';
 
 const Checkout = () => {
-
-  
-  const { cart, totalPrice, setCart } = useContext(CartContext);
+const { cart, totalPrice, setCart } = useContext(CartContext);
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    deliveryArea: "outside", // Default to outside Dhaka
+    deliveryArea: "outside",
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
   });
+
   const [getUser, setGetUser] = useState("");
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [randomId, setRandomId] = useState("");
+  const [remainingTime, setRemainingTime] = useState(0);
+
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  // Generate random order ID
-  const [randomId, setRandomId] = useState('');
+  const ORDER_LOCK_KEY = "last_order_time";
+  const ORDER_BLOCK_DURATION = 30 * 60 * 1000; // 1 hour
+
   const generateRandomText = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < 5; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     setRandomId(result);
-  }
+  };
 
-  // Track ViewCart event when component mounts
+  const getRemainingOrderTime = () => {
+    const lastOrderTime = localStorage.getItem(ORDER_LOCK_KEY);
+    if (!lastOrderTime) return 0;
+
+    const diff = Date.now() - Number(lastOrderTime);
+    const remaining = ORDER_BLOCK_DURATION - diff;
+
+    return remaining > 0 ? remaining : 0;
+  };
+
+  const isOrderBlocked = () => {
+    const remaining = getRemainingOrderTime();
+
+    if (remaining > 0) {
+      const minutes = Math.ceil(remaining / (1000 * 60));
+      toast.error(`আপনি ইতোমধ্যে একটি অর্ডার করেছেন। নতুন অর্ডার দেওয়ার আগে ${minutes} মিনিট অপেক্ষা করুন।`);
+      return true;
+    }
+
+    return false;
+  };
+
+  const formatRemainingTime = (ms) => {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.ceil((totalSeconds % 3600) / 60);
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
   useEffect(() => {
-    
-    if (cart.length > 0) {
-      // Meta Pixel ViewCart
-      // ReactPixel.track('ViewCart', {
-      //   content_ids: cart.map(item => item.id),
-      //   contents: cart.map(item => ({
-      //     id: item.id,
-      //     quantity: item.quantity,
-      //     item_price: item.selling_price
-      //   })),
-      //   content_type: 'product',
-      //   value: totalPrice,
-      //   currency: 'BDT',
-      //   num_items: cart.length
-      // });
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (!storedCart.length) {
+      setCart([]);
+    }
 
-      // Google Analytics view_cart
+    if (cart.length > 0 && window.dataLayer) {
       window.dataLayer.push({
         event: "begin_checkout",
         ecommerce: {
-          items: cart.map(item => ({
+          items: cart.map((item) => ({
             item_id: item.id,
             item_name: item.product_name,
             price: item.selling_price,
             item_category: item.select_category,
-            quantity: item.quantity
+            quantity: item.quantity,
           })),
           value: totalPrice,
-          currency: "BDT"
-        }
+          currency: "BDT",
+        },
       });
-
-      
     }
+
     generateRandomText();
+  }, []);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setGetUser(user?.user || "");
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRemainingTime(getRemainingOrderTime());
+    }, 1000);
+
+    setRemainingTime(getRemainingOrderTime());
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleChange = (event) => {
@@ -83,17 +127,11 @@ const Checkout = () => {
     return area === "inside" ? 70 : 120;
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setGetUser(user?.user);
-  }, []);
-
   const validateBangladeshiPhoneNumber = (phone) => {
     const regex = /^(?:\+8801|01)\d{9}$/;
     return regex.test(phone);
   };
 
-  // Format date for guest orders
   const formatDate = (date) => {
     return date.toLocaleDateString("en-US", {
       year: "numeric",
@@ -101,20 +139,31 @@ const Checkout = () => {
       day: "numeric",
     });
   };
+
   const currentDate = formatDate(new Date());
 
   const checkOut = async (e) => {
     e.preventDefault();
- 
+
+    if (isOrderBlocked()) return;
+
     const productDetails = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (!productDetails.length) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+
     const deliveryCharge = calculateDeliveryCharge(formData.deliveryArea);
     const totalValue = totalPrice + deliveryCharge;
-    const areaName = formData.deliveryArea === "inside" ? "ঢাকার ভিতরে" : "ঢাকার বাইরে";
+    const areaName =
+      formData.deliveryArea === "inside" ? "ঢাকার ভিতরে" : "ঢাকার বাইরে";
 
-    // Get user data (logged in or guest)
     const userEmail = getUser ? getUser.email : formData?.email;
     const userName = getUser ? getUser.displayName : formData.name;
-    const userPhone = getUser ? orderData?.phone || formData.phone : formData.phone;
+    const userPhone = getUser
+      ? orderData?.phone || formData.phone
+      : formData.phone;
 
     const phone = userPhone;
 
@@ -133,74 +182,60 @@ const Checkout = () => {
     const order = {
       user_id: getUser ? getUser.uid : null,
       cart: productDetails,
-      name: formData.name,
+      name: getUser ? getUser.displayName || formData.name : formData.name,
       client_order_id: randomId,
       email: userEmail,
-      address: `${getUser ? orderData?.address || formData.address : formData.address}, ${areaName}`,
+      address: `${
+        getUser ? orderData?.address || formData.address : formData.address
+      }, ${areaName}`,
       phone: phone,
       total_price: totalValue,
       p_method: "Cash On Delivery",
     };
 
     try {
-      // Prepare hashed user data
-      const hashedEmail = userEmail ? await sha256(userEmail.toLowerCase()) : undefined;
+      const hashedEmail = userEmail
+        ? await sha256(userEmail.toLowerCase())
+        : undefined;
       const hashedPhone = userPhone ? await sha256(userPhone) : undefined;
-      const hashedName = userName ? await sha256(userName.toLowerCase()) : undefined;
-      const hashedUserId = getUser?.uid ? await sha256(getUser.uid) : undefined;
+      const hashedName = userName
+        ? await sha256(userName.toLowerCase())
+        : undefined;
+      const hashedUserId = getUser?.uid
+        ? await sha256(getUser.uid)
+        : undefined;
 
-      // Meta Pixel Purchase with user data
-      // ReactPixel.track('Purchase', {
-      //   value: totalValue,
-      //   currency: 'BDT',
-      //   content_ids: productDetails.map(item => item.id),
-      //   contents: productDetails.map(item => ({
-      //     id: item.id,
-      //     quantity: item.quantity,
-      //     item_price: item.selling_price
-      //   })),
-      //   content_type: 'product',
-      //   order_id: randomId,
-      //   em: hashedEmail,
-      //   ph: hashedPhone,
-      //   fn: hashedName,
-      //   external_id: hashedUserId
-      // });
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "purchase",
+          ecommerce: {
+            transaction_id: randomId,
+            value: totalValue,
+            tax: 0,
+            shipping: deliveryCharge,
+            currency: "BDT",
+            items: productDetails.map((item) => ({
+              item_id: item.id,
+              item_name: item.product_name,
+              price: item.selling_price,
+              item_category: item.select_category,
+              quantity: item.quantity,
+            })),
+            user_data: {
+              email_address: hashedEmail,
+              phone_number: hashedPhone,
+              address: {
+                first_name: hashedName,
+              },
+            },
+          },
+        });
+      }
 
-      // Google Analytics Purchase with user data
-      window.dataLayer.push({
-        event: "purchase",
-        ecommerce: {
-          transaction_id: randomId,
-          value: totalValue,
-          tax: 0,
-          shipping: deliveryCharge,
-          currency: "BDT",
-          items: productDetails.map(item => ({
-            item_id: item.id,
-            item_name: item.product_name,
-            price: item.selling_price,
-            item_category: item.select_category,
-            quantity: item.quantity
-          })),
-          user_data: {
-            email_address: hashedEmail,
-            phone_number: hashedPhone,
-            address: {
-              first_name: hashedName
-            }
-          }
-        }
-      });
-
-      // Track CompleteRegistration for guest checkout
-      if (!getUser) {
-        // ReactPixel.track('CompleteRegistration');
-        
-        // Google Analytics for guest registration
+      if (!getUser && window.dataLayer) {
         window.dataLayer.push({
           event: "sign_up",
-          method: "guest_checkout"
+          method: "guest_checkout",
         });
       }
 
@@ -213,10 +248,12 @@ const Checkout = () => {
       });
 
       if (response.ok) {
+        localStorage.setItem(ORDER_LOCK_KEY, Date.now().toString());
+        setRemainingTime(getRemainingOrderTime());
+
         localStorage.setItem("order", JSON.stringify(order));
         toast.success("Your Order is Placed Successfully");
 
-        // Save guest order (for non-logged-in users)
         if (!getUser) {
           const guestOrderWithDate = {
             ...order,
@@ -224,7 +261,8 @@ const Checkout = () => {
             order_id: randomId,
           };
 
-          const guestOrders = JSON.parse(localStorage.getItem("guestOrders")) || [];
+          const guestOrders =
+            JSON.parse(localStorage.getItem("guestOrders")) || [];
           guestOrders.push(guestOrderWithDate);
           localStorage.setItem("guestOrders", JSON.stringify(guestOrders));
         }
@@ -234,8 +272,16 @@ const Checkout = () => {
 
         navigate("/order-success");
       } else {
-        const errorData = await response.json();
-        toast.error(errorData.message || "Order placement failed");
+        let errorMessage = "Order placement failed";
+
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (err) {
+          // ignore JSON parse error
+        }
+
+        toast.error(errorMessage);
       }
     } catch (error) {
       toast.error("Failed to place your order, please try again later.");

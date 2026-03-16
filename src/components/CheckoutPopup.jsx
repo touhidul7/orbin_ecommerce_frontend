@@ -325,6 +325,7 @@ export default function CheckoutPopup() {
     };
 
     try {
+      localStorage.setItem("last_order_time", Date.now().toString());
       const hashedEmail = userEmail ? await sha256(userEmail.toLowerCase()) : undefined;
       const hashedPhone = userPhone ? await sha256(userPhone) : undefined;
       const hashedName = userName ? await sha256(userName.toLowerCase()) : undefined;

@@ -213,10 +213,12 @@ const Single = () => {
   const loadRelatedProducts = async (select_category, currentProductId) => {
     setRelatedLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/products/category/${select_category}`);
+      const response = await fetch(
+        `${BASE_URL}/products/category/${select_category}`,
+      );
       const result = await response.json();
       const filteredProducts = result[0].filter(
-        (product) => product.id !== parseInt(currentProductId)
+        (product) => product.id !== parseInt(currentProductId),
       );
       setRelatedProducts(filteredProducts);
     } catch (error) {
@@ -389,7 +391,9 @@ const Single = () => {
                 </div>
 
                 <div className="md:flex-1 px-4 lg:pt-0 pt-5">
-                  <p className="text-gray-600 text-sm mb-4">{data.select_category}</p>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {data.select_category}
+                  </p>
 
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">
                     {data.product_name}
@@ -447,7 +451,9 @@ const Single = () => {
                   {/* Color */}
                   {colors.length > 0 && (
                     <div className="mt-4">
-                      <span className="font-bold text-gray-700">Choose Color:</span>
+                      <span className="font-bold text-gray-700">
+                        Choose Color:
+                      </span>
                       <div className="flex gap-2 mt-2">
                         {colors.map((color, index) => (
                           <button
@@ -473,7 +479,15 @@ const Single = () => {
                     </div>
                   )}
 
-                  <div className="flex gap-4 mb-4 lg:mt-0 mt-4">
+                  <div className="md:flex-row flex-col flex gap-4 mb-4 lg:mt-0 mt-4">
+                    <div className="w-full">
+                      <button
+                        onClick={handleOrderNow}
+                        className="bg-[#DF263A] text-white font-bold py-2 px-4 rounded-md hover:bg-[#b61525] hover:text-white transition duration-300 cursor-pointer w-full"
+                      >
+                        অর্ডার করুন
+                      </button>
+                    </div>
                     <div className="w-full">
                       {isInCart ? (
                         <button
@@ -490,15 +504,6 @@ const Single = () => {
                           কার্টে রাখুন
                         </button>
                       )}
-                    </div>
-
-                    <div className="w-full">
-                      <button
-                        onClick={handleOrderNow}
-                        className="bg-[#DF263A] text-white font-bold py-2 px-4 rounded-md hover:bg-[#b61525] hover:text-white transition duration-300 cursor-pointer w-full"
-                      >
-                        অর্ডার করুন
-                      </button>
                     </div>
                   </div>
 
@@ -526,7 +531,9 @@ const Single = () => {
                 <div className="text-2xl font-bold text-gray-800 border-b border-gray-300">
                   Description
                 </div>
-                <div className="mt-2 text-gray-700">{data.product_description}</div>
+                <div className="mt-2 text-gray-700">
+                  {data.product_description}
+                </div>
               </div>
             </div>
           </div>
