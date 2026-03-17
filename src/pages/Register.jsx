@@ -1,34 +1,51 @@
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../context/authContext";
+import { doRegister } from "../firebase/auth";
 import Header from "../components/Header";
 import MainFooter from "../components/MainFooter";
-
 const Register = () => {
   const { userLoggedIn } = useAuth() || {};
   const [isSigningUp, setIsSigningUp] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSigningUp) return;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (isSigningUp) return;
 
-    const email = e.target[0].value.trim();
-    const password = e.target[1].value;
+  const formData = new FormData(e.target);
 
-    setIsSigningUp(true);
+  // const name = formData.get("name")?.trim();
+  const phone = formData.get("phone")?.trim();
+  const password = formData.get("password");
 
-    try {
-      await doCreateUserWithEmailAndPassword(email, password);
-      toast.success("Account created successfully!");
-      navigate("/login");
-    } catch (error) {
-      toast.error(error.message || "Failed to create account");
-      setIsSigningUp(false);
-    }
-  };
+  // if (!name || !phone || !password) {
+  //   toast.error("All fields are required");
+  //   return;
+  // }
+
+  setIsSigningUp(true);
+
+  try {
+    const data = await doRegister({
+      name: "Customer",
+      phone: phone,
+      password: password,
+      password_confirmation: password,
+    });
+
+    toast.success(data.message || "Account created successfully");
+
+    navigate("/login");
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Failed to create account"
+    );
+  } finally {
+    setIsSigningUp(false);
+  }
+};
 
   if (userLoggedIn) {
     return <Navigate to="/" replace />;
@@ -38,7 +55,6 @@ const Register = () => {
     <>
       <Header />
 
-      {/* Added padding-top to prevent overlap with fixed header */}
       <section className="pt-32 sm:pt-36 lg:pt-44 bg-gray-50 min-h-screen">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto text-center">
@@ -52,13 +68,13 @@ const Register = () => {
               <div className="px-4 py-6 sm:px-8 sm:py-8">
                 <form onSubmit={handleSubmit} noValidate>
                   <div className="space-y-6">
-                    {/* Email */}
+                    {/* Phone */}
                     <div>
                       <label
-                        htmlFor="email"
+                        htmlFor="phone"
                         className="text-base font-medium text-gray-900"
                       >
-                        Email address
+                        Phone number
                       </label>
                       <div className="mt-2 relative text-gray-400 focus-within:text-gray-600">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -72,16 +88,17 @@ const Register = () => {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               strokeWidth={2}
-                              d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                              d="M3 5a2 2 0 012-2h3.28a2 2 0 011.9 1.37l1.1 3.3a2 2 0 01-.45 2.11l-1.47 1.47a16 16 0 006.36 6.36l1.47-1.47a2 2 0 012.11-.45l3.3 1.1A2 2 0 0121 18.72V22a2 2 0 01-2 2h-1C9.163 24 0 14.837 0 4V3a2 2 0 012-2h1z"
                             />
                           </svg>
                         </div>
                         <input
-                          id="email"
-                          type="email"
-                          autoComplete="email"
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          autoComplete="tel"
                           required
-                          placeholder="Enter email to get started"
+                          placeholder="Enter phone number"
                           className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 caret-blue-600"
                         />
                       </div>
@@ -113,6 +130,7 @@ const Register = () => {
                         </div>
                         <input
                           id="password"
+                          name="password"
                           type="password"
                           autoComplete="new-password"
                           required

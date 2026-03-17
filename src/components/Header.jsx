@@ -3,6 +3,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/authContext";
 import Loader from "./Loader";
 import { IoCartOutline } from "react-icons/io5";
 import ProductSearch from "./ProductSearch";
@@ -11,6 +12,7 @@ const MAX_DESKTOP_CATS = 12;
 
 const Header = ({ menuopen, setMenuOpen, setIsCartOpen }) => {
   const { cart, user } = useContext(CartContext);
+  const { userLoggedIn } = useAuth();
 
   const [categories, setCategories] = useState([]);
   const [localOrderData, setLocalOrderData] = useState([]);
@@ -273,7 +275,7 @@ const Header = ({ menuopen, setMenuOpen, setIsCartOpen }) => {
                   </Link> */}
 
                   <div className="w-full space-y-1">
-                    {user?.user?.uid ? (
+                    {userLoggedIn ? (
                       <Link
                         to="/account"
                         className="text-[18px] block w-full py-2 text-base font-medium text-black hover:bg-white/10 rounded px-2 whitespace-nowrap"
@@ -522,7 +524,7 @@ const Header = ({ menuopen, setMenuOpen, setIsCartOpen }) => {
               <hr className="my-4 border-white/20" />
 
               <div className="flex flex-col space-y-2">
-                {user?.user?.uid ? (
+                {userLoggedIn ? (
                   <Link
                     to="/account"
                     className="py-2 text-base font-medium text-black"

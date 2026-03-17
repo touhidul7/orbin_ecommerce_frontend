@@ -3,6 +3,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoCloseOutline } from "react-icons/io5";
 import { CartContext } from "../context/CartContext";
+import { api } from "../firebase/auth";
 import OrderSuccessPopup from "./OrderSuccessPopup";
 
 function safeJsonParse(value) {
@@ -194,7 +195,7 @@ export default function CheckoutPopup() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    setGetUser(user?.user || null);
+    setGetUser(user || null);
   }, []);
 
   const handleChange = (event) => {
@@ -313,7 +314,7 @@ export default function CheckoutPopup() {
     }
 
     const order = {
-      user_id: getUser ? getUser.uid : null,
+      user_id: getUser ? getUser.id : null,
       cart: productDetails,
       name: formData.name,
       client_order_id: randomId,
@@ -357,13 +358,9 @@ export default function CheckoutPopup() {
         window.dataLayer?.push({ event: "sign_up", method: "guest_checkout" });
       }
 
-      const response = await fetch(`${BASE_URL}/order/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order),
-      });
+      const response = await api.post("/order/add", order);
 
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         localStorage.setItem("order", JSON.stringify(order));
         toast.success("আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে ✅");
 

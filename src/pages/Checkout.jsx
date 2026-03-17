@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { api } from "../firebase/auth";
 // import ReactPixel from 'react-facebook-pixel';
 import CartSection from "../components/CartSection";
 // import { sha256 } from '../utils/hash';
@@ -102,7 +103,7 @@ const { cart, totalPrice, setCart } = useContext(CartContext);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    setGetUser(user?.user || "");
+    setGetUser(user || "");
   }, []);
 
   useEffect(() => {
@@ -180,7 +181,7 @@ const { cart, totalPrice, setCart } = useContext(CartContext);
     }
 
     const order = {
-      user_id: getUser ? getUser.uid : null,
+      user_id: getUser ? getUser.id : null,
       cart: productDetails,
       name: getUser ? getUser.displayName || formData.name : formData.name,
       client_order_id: randomId,
@@ -201,8 +202,8 @@ const { cart, totalPrice, setCart } = useContext(CartContext);
       const hashedName = userName
         ? await sha256(userName.toLowerCase())
         : undefined;
-      const hashedUserId = getUser?.uid
-        ? await sha256(getUser.uid)
+      const hashedUserId = getUser?.id
+        ? await sha256(getUser.id)
         : undefined;
 
       if (window.dataLayer) {
@@ -239,15 +240,9 @@ const { cart, totalPrice, setCart } = useContext(CartContext);
         });
       }
 
-      const response = await fetch(`${BASE_URL}/order/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
+      const response = await api.post("/order/add", order);
 
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         localStorage.setItem(ORDER_LOCK_KEY, Date.now().toString());
         setRemainingTime(getRemainingOrderTime());
 
@@ -275,8 +270,7 @@ const { cart, totalPrice, setCart } = useContext(CartContext);
         let errorMessage = "Order placement failed";
 
         try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
+          errorMessage = response.data.message || errorMessage;
         } catch (err) {
           // ignore JSON parse error
         }

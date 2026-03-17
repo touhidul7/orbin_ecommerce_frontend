@@ -8,6 +8,7 @@ import MainLayout from "./layout/MainLayout.jsx";
 import Cart from "./pages/Cart.jsx";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "./context/CartContext.jsx";
+import { AuthProvider } from "./context/authContext/index.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Account from "./pages/Account.jsx";
 import Register from "./pages/Register.jsx";
@@ -164,10 +165,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <CartProvider>
-      <RouterProvider router={router}>
-        <Toaster />
-      </RouterProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router}>
+          <Toaster />
+        </RouterProvider>
+      </CartProvider>
+    </AuthProvider>
   </StrictMode>
 );

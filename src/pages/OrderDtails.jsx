@@ -15,7 +15,7 @@ const OrderDtails = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setGetUser(parsedUser.user);
+        setGetUser(parsedUser);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
@@ -23,9 +23,9 @@ const OrderDtails = () => {
   }, []);
 
   const loadData = async () => {
-    if (!getUser?.uid) return; // Prevent fetching with invalid user
+    if (!getUser?.id) return; // Prevent fetching with invalid user
     try {
-      const response = await fetch(`${BASE_URL}/order/${getUser.uid}`);
+      const response = await fetch(`${BASE_URL}/order/${getUser.id}`);
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
 
@@ -40,7 +40,7 @@ const OrderDtails = () => {
   };
 
   useEffect(() => {
-    if (getUser?.uid) {
+    if (getUser?.id) {
       loadData();
     } else {
       // For guest users, get the specific order from localStorage using the order ID

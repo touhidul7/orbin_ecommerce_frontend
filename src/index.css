@@ -122,16 +122,18 @@ body {
 
 /* Product hover effect */
 /* initial hidden state */
-.custom-button,
 .custom-color {
   opacity: 0;
   pointer-events: none;
   transition: all 0.35s ease;
 }
 
-/* BUTTON: slide UP (bottom → top) */
+/* BUTTON: always visible now */
 .custom-button {
-  transform: translateY(20px);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: all 0.35s ease;
 }
 
 /* COLOR: slide DOWN (top → bottom) */
@@ -139,13 +141,7 @@ body {
   transform: translateY(-20px);
 }
 
-/* on hover */
-.product-group:hover .custom-button {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
+/* on hover - only color selector shows */
 .product-group:hover .custom-color {
   opacity: 1;
   transform: translateY(0);

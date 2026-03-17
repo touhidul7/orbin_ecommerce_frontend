@@ -1,36 +1,31 @@
-/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from "react";
 import { doSignOut } from "../firebase/auth";
+import { api } from "../firebase/auth";
 import { CartContext } from "../context/CartContext";
+import { useAuth } from "../context/authContext";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { get } from "jquery";
 
 const Account = () => {
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [getUser, setGetUser] = useState(null);
   const navigate = useNavigate();
   const { setUser } = useContext(CartContext);
+  const { logout: authLogout, currentUser } = useAuth();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setGetUser(parsedUser.user);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-      }
+    if (currentUser) {
+      setGetUser(currentUser);
     }
-  }, []);
+  }, [currentUser]);
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      await doSignOut();
-      localStorage.removeItem("user");
-      setUser(null);
+      await authLogout(); // Use auth context logout
+      setUser(null); // Also clear CartContext user
       toast.success("Logged out successfully");
       navigate("/");
     } catch (error) {
@@ -39,27 +34,46 @@ const Account = () => {
   };
 
   const loadData = async () => {
-    if (!getUser?.uid) return; // Prevent fetching with invalid user
+    if (!currentUser?.id) {
+      console.log("No user ID available");
+      setLoading(false);
+      return;
+    }
+    
     try {
-      const response = await fetch(`${BASE_URL}/order/${getUser.uid}`);
-      if (!response.ok) throw new Error("Failed to fetch");
-      const result = await response.json();
-      setOrderData(result.data);
+      setError(null);
+      console.log("Fetching orders for user ID:", currentUser.id);
+      const response = await api.get(`/order/${currentUser.id}`);
+      console.log("Order API Response:", response);
+      console.log("Order data:", response.data);
+      
+      // Handle different response structures
+      const orders = response.data?.data || response.data || [];
+      setOrderData(Array.isArray(orders) ? orders : []);
+      
+      if (!orders || orders.length === 0) {
+        console.log("No orders found for user");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
+      console.error("Error message:", error.message);
+      console.error("Error response:", error.response);
+      setError(error.response?.data?.message || error.message || "Failed to load orders");
+      setOrderData([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (getUser?.uid) {
+    if (currentUser?.id) {
       loadData();
     } else {
       const guestOrders = JSON.parse(localStorage.getItem("guestOrders")) || [];
       setOrderData(guestOrders);
+      setLoading(false);
     }
-  }, [getUser, BASE_URL]);
+  }, [currentUser]);
 
   /* format date */
   const formatDate = (isoDate) => {
@@ -92,7 +106,7 @@ const Account = () => {
                     <div>
                       <h2 className="flex items-start text-xl font-bold leading-none text-gray-900  sm:text-2xl pt-5 flex-col">
                         User Id:{" "}
-                        <span className="text-sm"> {getUser?.uid} </span>
+                        <span className="text-sm"> {getUser?.id} </span>
                       </h2>
                     </div>
                   </div>
@@ -105,7 +119,7 @@ const Account = () => {
                 </div>
               </div>
               <button
-                onClick={logout}
+                onClick={handleLogout}
                 type="button"
                 data-modal-target="accountInformationModal2"
                 data-modal-toggle="accountInformationModal2"
@@ -137,8 +151,22 @@ const Account = () => {
 
           <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 ">
             <h3 className="mb-4 text-xl font-semibold text-gray-900 ">
-              {orderData?.length === 0 ? "No orders yet" : " Latest orders"}
+              {loading ? "Loading..." : orderData?.length === 0 ? "No orders yet" : " Latest orders"}
             </h3>
+            
+            {error && (
+              <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <p className="font-semibold">Error loading orders:</p>
+                <p>{error}</p>
+              </div>
+            )}
+
+            {loading && (
+              <div className="text-center py-8">
+                <p className="text-gray-500">Fetching your orders...</p>
+              </div>
+            )}
+
             {orderData?.map((order, i) => (
               <div
                 key={i}

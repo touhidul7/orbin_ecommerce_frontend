@@ -1,43 +1,64 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { doSignOut } from "../../firebase/auth";
 
 const AuthContext = createContext();
 
 export function useAuth() {
-    return useContext(AuthContext);
+  return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }) {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, inializerUser);
-        return unsubscribe;
-    }, []);
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
 
-    async function inializerUser(user) {
-        if (user) {
-            setCurrentUser({ ...user });
-            setUserLoggedIn(true);
-        } else {
-            setCurrentUser(null);
-            setUserLoggedIn(false);
-        }
-        setLoading(false);
+      if (token && user) {
+        setCurrentUser(JSON.parse(user));
+        setUserLoggedIn(true);
+      } else {
+        setCurrentUser(null);
+        setUserLoggedIn(false);
+      }
+    } catch (error) {
+      console.error("Auth init error:", error);
+      setCurrentUser(null);
+      setUserLoggedIn(false);
+    } finally {
+      setLoading(false);
     }
+  }, []);
 
-    const value = {
-        currentUser,
-        userLoggedIn,
-        loading
-    }
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    )
+  const login = (user, token) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    setCurrentUser(user);
+    setUserLoggedIn(true);
+  };
 
+  const logout = async () => {
+    await doSignOut();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setCurrentUser(null);
+    setUserLoggedIn(false);
+  };
+
+  const value = {
+    currentUser,
+    userLoggedIn,
+    loading,
+    login,
+    logout,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
